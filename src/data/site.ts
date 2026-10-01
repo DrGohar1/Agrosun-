@@ -1,25 +1,25 @@
 // All editable site content lives here (texts from the company PDFs, images, banners).
 // Change a photo by swapping its import; change a text by editing the en/ar strings.
-import logo from "@/assets/agrosun-logo.png.asset.json";
-import mark from "@/assets/agrosun-mark.png.asset.json";
-import field from "@/assets/pdf-field.jpg.asset.json";
-import pdfGrapes from "@/assets/pdf-grapes.jpg.asset.json";
-import sorting from "@/assets/pdf-sorting.jpg.asset.json";
-import grapes from "@/assets/grapes.jpg.asset.json";
-import artichokes from "@/assets/artichokes.jpg.asset.json";
-import facility from "@/assets/facility.jpg.asset.json";
-import heroFields from "@/assets/hero-fields.jpg.asset.json";
-import greenBeans from "@/assets/green-beans.jpg.asset.json";
-import springOnions from "@/assets/spring-onions.jpg.asset.json";
-import peas from "@/assets/peas.jpg.asset.json";
-import cauliflower from "@/assets/cauliflower.jpg.asset.json";
-import strawberries from "@/assets/strawberries.jpg.asset.json";
-import broccoli from "@/assets/broccoli.jpg.asset.json";
-import okra from "@/assets/okra.jpg.asset.json";
-import pickled from "@/assets/pickled-peppers.jpg.asset.json";
-import carrots from "@/assets/carrots.jpg.asset.json";
-import peppers from "@/assets/bell-peppers.jpg.asset.json";
-import watermelon from "@/assets/watermelon.jpg.asset.json";
+const logo = { url: "/images/agrosun-logo.png" };
+const mark = { url: "/images/agrosun-mark.png" };
+const field = { url: "/images/pdf-field.jpg" };
+const pdfGrapes = { url: "/images/pdf-grapes.jpg" };
+const sorting = { url: "/images/pdf-sorting.jpg" };
+const grapes = { url: "/images/grapes.jpg" };
+const artichokes = { url: "/images/artichokes.jpg" };
+const facility = { url: "/images/facility.jpg" };
+const heroFields = { url: "/images/hero-fields.jpg" };
+const greenBeans = { url: "/images/green-beans.jpg" };
+const springOnions = { url: "/images/spring-onions.jpg" };
+const peas = { url: "/images/peas.jpg" };
+const cauliflower = { url: "/images/cauliflower.jpg" };
+const strawberries = { url: "/images/strawberries.jpg" };
+const broccoli = { url: "/images/broccoli.jpg" };
+const okra = { url: "/images/okra.jpg" };
+const pickled = { url: "/images/pickled-peppers.jpg" };
+const carrots = { url: "/images/carrots.jpg" };
+const peppers = { url: "/images/bell-peppers.jpg" };
+const watermelon = { url: "/images/watermelon.jpg" };
 
 export type L = { en: string; ar: string };
 

@@ -56,9 +56,12 @@ function AdminPage() {
 
   const authenticate = async (e: FormEvent) => {
     e.preventDefault(); setAuthBusy(true);
+    const raw = email.trim();
+    // Plain usernames (e.g. "Gohar") map to an internal login address.
+    const login = raw.includes("@") ? raw : `${raw.toLowerCase()}@agrosun.admin`;
     const result = signup
-      ? await supabase.auth.signUp({ email, password, options: { emailRedirectTo: `${window.location.origin}/admin` } })
-      : await supabase.auth.signInWithPassword({ email, password });
+      ? await supabase.auth.signUp({ email: login, password, options: { emailRedirectTo: `${window.location.origin}/admin` } })
+      : await supabase.auth.signInWithPassword({ email: login, password });
     setAuthBusy(false);
     if (result.error) { toast.error(result.error.message); return; }
     if (signup && !result.data.session) toast.success("Check your email to confirm your account.");

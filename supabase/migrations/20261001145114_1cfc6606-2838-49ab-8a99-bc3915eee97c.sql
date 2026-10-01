@@ -1,0 +1,3 @@
+UPDATE public.products SET image_url = regexp_replace(image_url, '^/__l5e/assets-v1/[^/]+/', '/images/') WHERE image_url LIKE '/__l5e/%';
+UPDATE public.site_settings SET logo_url = regexp_replace(logo_url, '^/__l5e/assets-v1/[^/]+/', '/images/') WHERE logo_url LIKE '/__l5e/%';
+UPDATE public.site_settings SET hero_media_url = regexp_replace(hero_media_url, '^/__l5e/assets-v1/[^/]+/', '/images/') WHERE hero_media_url LIKE '/__l5e/%';
