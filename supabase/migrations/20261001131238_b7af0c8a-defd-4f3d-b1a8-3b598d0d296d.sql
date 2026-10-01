@@ -1,0 +1,1 @@
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS developer_name text NOT NULL DEFAULT '', ADD COLUMN IF NOT EXISTS developer_url text NOT NULL DEFAULT '', ADD COLUMN IF NOT EXISTS developer_avatar_url text NOT NULL DEFAULT '';

@@ -1,0 +1,10 @@
+revoke execute on function public.has_role(uuid, app_role) from public, anon;
+grant execute on function public.has_role(uuid, app_role) to authenticated;
+drop policy "public read products" on public.products; create policy "public read products" on public.products for select to anon, authenticated using (visible);
+create policy "admin read products" on public.products for select to authenticated using (public.has_role(auth.uid(),'admin'));
+drop policy "public read certs" on public.certifications; create policy "public read certs" on public.certifications for select to anon, authenticated using (visible);
+create policy "admin read certs" on public.certifications for select to authenticated using (public.has_role(auth.uid(),'admin'));
+drop policy "public read partners" on public.partners; create policy "public read partners" on public.partners for select to anon, authenticated using (visible);
+create policy "admin read partners" on public.partners for select to authenticated using (public.has_role(auth.uid(),'admin'));
+drop policy "public read banners" on public.site_banners; create policy "public read banners" on public.site_banners for select to anon, authenticated using (visible);
+create policy "admin read banners" on public.site_banners for select to authenticated using (public.has_role(auth.uid(),'admin'));
