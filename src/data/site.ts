@@ -55,7 +55,7 @@ export const hero = {
 export const stats = [
   { value: "30+", label: { en: "Years of experience", ar: "عامًا من الخبرة" } },
   { value: "2", label: { en: "Owned facilities", ar: "منشأة مملوكة" } },
-  { value: "5", label: { en: "International certifications", ar: "اعتمادات دولية" } },
+  { value: "7", label: { en: "International certifications", ar: "اعتمادات دولية" } },
   { value: "-18°C", label: { en: "Unbroken cold chain", ar: "سلسلة تبريد متصلة" } },
 ];
 
@@ -127,6 +127,8 @@ export const certifications = [
   { name: "ISO 22000", text: { en: "Food Safety Management Systems", ar: "نظم إدارة سلامة الغذاء" } },
   { name: "ISO 9001", text: { en: "Quality Management Systems", ar: "نظم إدارة الجودة" } },
   { name: "HACCP", text: { en: "Hazard Analysis & Critical Control Points", ar: "تحليل المخاطر ونقاط التحكم الحرجة" } },
+  { name: "ISO 45001", text: { en: "Occupational Health & Safety", ar: "الصحة والسلامة المهنية" } },
+  { name: "SMETA", text: { en: "Ethical trade audit — fresh produce", ar: "تدقيق التجارة الأخلاقية — الحاصلات الطازجة" } },
 ];
 
 /** Markets we export to ("who we deal with"). */
@@ -157,8 +159,8 @@ export const contact = {
   map: "https://maps.google.com/?q=Sheikh+Zayed+Giza",
   social: { facebook: "", instagram: "", linkedin: "" },
   offices: [
-    { label: { en: "Head office", ar: "العنوان الإداري" }, value: { en: "14 El-Zahraa St., Sheikh Zayed, Giza", ar: "١٤ شارع الزهراء، الشيخ زايد" } },
+    { label: { en: "Head office", ar: "العنوان الإداري" }, value: { en: "14 El Nozha St.", ar: "١٤ شارع النزهة" } },
     { label: { en: "Badr Center Packhouse", ar: "محطة مركز بدر" }, value: { en: "El-Tahaddi Rd., El-Beheira", ar: "طريق التحدي – محافظة البحيرة" } },
-    { label: { en: "Sadat City Factory", ar: "مصنع السادات" }, value: { en: "Industrial Zone, Sadat City, Menofia", ar: "المنطقة الصناعية – مدينة السادات" } },
+    { label: { en: "Sadat City Factory", ar: "مصنع السادات" }, value: { en: "Industrial Zone 4, Block 4, Sadat City", ar: "المنطقة الصناعية الرابعة، بلوك ٤، مدينة السادات" } },
   ],
 };

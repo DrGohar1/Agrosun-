@@ -95,6 +95,54 @@ export type Database = {
         }
         Relationships: []
       }
+      facilities: {
+        Row: {
+          cover_url: string
+          created_at: string
+          gallery: Json
+          id: string
+          name_ar: string
+          name_en: string
+          place_ar: string
+          place_en: string
+          points_ar: string
+          points_en: string
+          sort_order: number
+          updated_at: string
+          visible: boolean
+        }
+        Insert: {
+          cover_url?: string
+          created_at?: string
+          gallery?: Json
+          id?: string
+          name_ar?: string
+          name_en: string
+          place_ar?: string
+          place_en?: string
+          points_ar?: string
+          points_en?: string
+          sort_order?: number
+          updated_at?: string
+          visible?: boolean
+        }
+        Update: {
+          cover_url?: string
+          created_at?: string
+          gallery?: Json
+          id?: string
+          name_ar?: string
+          name_en?: string
+          place_ar?: string
+          place_en?: string
+          points_ar?: string
+          points_en?: string
+          sort_order?: number
+          updated_at?: string
+          visible?: boolean
+        }
+        Relationships: []
+      }
       partners: {
         Row: {
           country: string | null

@@ -1,6 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CheckCircle2, MapPin } from "lucide-react";
 import { banners, about, facilities } from "@/data/site";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useLang } from "@/lib/lang";
 import { PageBanner, Section, Reveal } from "@/components/site/Shell";
 
@@ -12,8 +15,12 @@ export const Route = createFileRoute("/about")({
   component: About,
 });
 
+type Fac = { name: { en: string; ar: string }; place: { en: string; ar: string }; image: string; points: { en: string[]; ar: string[] }; gallery: string[] };
 function About() {
   const { tr } = useLang();
+  const [facs, setFacs] = useState<Fac[]>(facilities.map((f) => ({ ...f, gallery: [f.image] })));
+  const [open, setOpen] = useState<Fac | null>(null);
+  useEffect(() => { void (supabase as any).from("facilities").select("*").eq("visible", true).order("sort_order").then(({ data }: { data: any[] | null }) => { if (data?.length) setFacs(data.map((d) => ({ name: { en: d.name_en, ar: d.name_ar || d.name_en }, place: { en: d.place_en, ar: d.place_ar || d.place_en }, image: d.cover_url || d.gallery?.[0] || "", points: { en: d.points_en.split("\n").filter(Boolean), ar: (d.points_ar || d.points_en).split("\n").filter(Boolean) }, gallery: (d.gallery ?? []).filter(Boolean) }))); }); }, []);
   return (
     <>
       <PageBanner page="about" image={banners.about.image} kicker={tr({ en: "About the group", ar: "نبذة عن المجموعة" })} title={tr({ en: "Experience spanning three decades", ar: "خبرة تمتد لثلاثة عقود" })} />
@@ -37,16 +44,17 @@ function About() {
       </Section>
       <Section kicker={tr({ en: "Infrastructure", ar: "البنية التحتية" })} title={tr({ en: "Full ownership of our assets", ar: "امتلاك كامل للأصول يضمن استمرارية التوريد" })}>
         <div className="grid gap-8 lg:grid-cols-2">
-          {facilities.map((f, i) => (
+          {facs.map((f, i) => (
             <Reveal key={i} delay={i * 150}>
-              <article className="group overflow-hidden rounded-3xl border border-border bg-card shadow-lift">
+              <button type="button" onClick={() => setOpen(f)} className="group block w-full overflow-hidden rounded-3xl border border-border bg-card text-start shadow-lift transition hover:-translate-y-1">
                 <div className="overflow-hidden"><img src={f.image} alt={f.name.en} loading="lazy" className="aspect-[16/9] w-full object-cover transition duration-700 group-hover:scale-105" /></div>
                 <div className="p-7">
                   <h3 className="font-display text-2xl text-primary">{tr(f.name)}</h3>
                   <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground"><MapPin className="h-4 w-4 text-accent" />{tr(f.place)}</p>
                   <ul className="mt-4 space-y-2 text-sm">{tr({ en: f.points.en.join("|"), ar: f.points.ar.join("|") }).split("|").map((x) => <li key={x} className="flex gap-2"><CheckCircle2 className="h-5 w-5 shrink-0 text-leaf" />{x}</li>)}</ul>
+                  <span className="mt-4 inline-block text-sm font-semibold text-accent">{tr({ en: `View ${f.gallery.length} photos →`, ar: `شاهد ${f.gallery.length} صور ←` })}</span>
                 </div>
-              </article>
+              </button>
             </Reveal>
           ))}
         </div>
@@ -56,6 +64,12 @@ function About() {
           {about.controls.map((c, i) => <Reveal key={i} delay={i * 100}><div className="h-full rounded-3xl border border-primary-foreground/10 bg-primary-foreground/5 p-6"><h3 className="text-lg font-bold text-leaf">{tr(c.title)}</h3><p className="mt-2 text-sm text-primary-foreground/75">{tr(c.text)}</p></div></Reveal>)}
         </div>
       </Section>
+      <Dialog open={!!open} onOpenChange={(o) => !o && setOpen(null)}>
+        <DialogContent className="max-h-[90svh] max-w-4xl overflow-y-auto">
+          {open && <><DialogTitle className="font-display text-3xl text-primary">{tr(open.name)}</DialogTitle><p className="text-sm text-muted-foreground">{tr(open.place)}</p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">{open.gallery.map((g, i) => <img key={g} src={g} alt={`${open.name.en} ${i + 1}`} loading="lazy" className="aspect-[4/3] w-full rounded-2xl object-cover animate-in fade-in zoom-in-95 duration-500" style={{ animationDelay: `${i * 80}ms` }} />)}</div></>}
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
