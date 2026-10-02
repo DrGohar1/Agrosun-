@@ -16,7 +16,7 @@ function About() {
   const { tr } = useLang();
   return (
     <>
-      <PageBanner image={banners.about.image} kicker={tr({ en: "About the group", ar: "نبذة عن المجموعة" })} title={tr({ en: "Experience spanning three decades", ar: "خبرة تمتد لثلاثة عقود" })} />
+      <PageBanner page="about" image={banners.about.image} kicker={tr({ en: "About the group", ar: "نبذة عن المجموعة" })} title={tr({ en: "Experience spanning three decades", ar: "خبرة تمتد لثلاثة عقود" })} />
       <Section>
         <div className="grid gap-5 md:grid-cols-3">
           {about.pillars.map((p, i) => (

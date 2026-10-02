@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Building2 } from "lucide-react";
 import { banners, markets, clientTypes, partners, brand } from "@/data/site";
 import { useLang } from "@/lib/lang";
+import { useRows } from "@/lib/cms";
 import { PageBanner, Section, Reveal } from "@/components/site/Shell";
 
 const title = "Agrosun Partners & Markets — UK, Germany, Italy, EU, USA";
@@ -14,9 +15,11 @@ export const Route = createFileRoute("/partners")({
 
 function Partners() {
   const { tr } = useLang();
+  const db = useRows("partners");
+  const list = db && db.length ? db.map((p) => ({ name: p.name, logo: p.logo_url || undefined })) : partners;
   return (
     <>
-      <PageBanner image={banners.partners.image} kicker={tr({ en: "Partners & markets", ar: "شركاؤنا وأسواقنا" })} title={tr({ en: "Your strategic partner for sustainable growth", ar: "شريككم الاستراتيجي للنمو المستدام" })} />
+      <PageBanner page="partners" image={banners.partners.image} kicker={tr({ en: "Partners & markets", ar: "شركاؤنا وأسواقنا" })} title={tr({ en: "Your strategic partner for sustainable growth", ar: "شريككم الاستراتيجي للنمو المستدام" })} />
       <Section kicker={tr({ en: "Where we export", ar: "الأسواق الحالية" })} title={tr({ en: "Markets we serve", ar: "الأسواق التي نخدمها" })}>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
           {markets.map((m, i) => <Reveal key={m.name.en} delay={i * 80}><div className="rounded-3xl border border-border bg-card p-6 text-center transition hover:-translate-y-1 hover:shadow-lift"><div className="text-5xl">{m.flag}</div><div className="mt-3 font-bold text-primary">{tr(m.name)}</div></div></Reveal>)}
@@ -29,7 +32,7 @@ function Partners() {
       </Section>
       <Section kicker={tr({ en: "Our partners", ar: "شركاؤنا" })} title={tr({ en: "Group companies & brands", ar: "شركات وعلامات المجموعة" })}>
         <div className="grid gap-4 sm:grid-cols-3">
-          {partners.map((p) => <div key={p.name} className="flex items-center gap-4 rounded-3xl border border-border bg-card p-6"><img src={p.logo ?? brand.mark} alt="" className="h-12 w-auto" /><span className="font-bold text-primary">{p.name}</span></div>)}
+          {list.map((p) => <div key={p.name} className="flex items-center gap-4 rounded-3xl border border-border bg-card p-6"><img src={p.logo ?? brand.mark} alt="" className="h-12 w-auto" /><span className="font-bold text-primary">{p.name}</span></div>)}
         </div>
       </Section>
     </>

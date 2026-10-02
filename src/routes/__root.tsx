@@ -120,6 +120,11 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const isAdmin = useRouterState({ select: (state) => state.location.pathname === "/admin" });
+  useEffect(() => {
+    const onErr = (e: Event) => { const t = e.target; if (t instanceof HTMLImageElement && !t.dataset['fb']) { t.dataset['fb'] = "1"; t.src = "/images/agrosun-mark.png"; t.style.objectFit = "contain"; } };
+    window.addEventListener("error", onErr, true);
+    return () => window.removeEventListener("error", onErr, true);
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

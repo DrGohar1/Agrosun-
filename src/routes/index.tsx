@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Snowflake, Sprout, Truck, PackageCheck, Globe2 } from "lucide-react";
 import { banners, brand, hero, stats, products, certifications, markets, about } from "@/data/site";
 import { useLang } from "@/lib/lang";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Section, Reveal } from "@/components/site/Shell";
 
 const title = "Agro Sun — Agrosun Group | Egyptian Fresh & IQF Produce Exporter since 1995";
@@ -21,19 +23,24 @@ const heroCards = [
 const icons = [Sprout, Truck, PackageCheck, Snowflake, Globe2];
 
 function Home() {
-  const { t, tr } = useLang();
+  const { t, tr, lang } = useLang();
+  const [hs, setHs] = useState<{ hero_media_url: string; hero_media_type: string; hero_title_en: string; hero_title_ar: string; hero_subtitle_en: string; hero_subtitle_ar: string } | null>(null);
+  useEffect(() => { void supabase.from("site_settings").select("hero_media_url,hero_media_type,hero_title_en,hero_title_ar,hero_subtitle_en,hero_subtitle_ar").eq("id", "main").maybeSingle().then(({ data }) => setHs(data)); }, []);
+  const heroTitle = hs && (lang === "ar" ? hs.hero_title_ar : hs.hero_title_en);
+  const heroSub = hs && (lang === "ar" ? hs.hero_subtitle_ar : hs.hero_subtitle_en);
   const featured = products.filter((p) => p.featured).concat(products.filter((p) => ["artichokes", "iqf-broccoli"].includes(p.id)));
   return (
     <>
       <section className="relative flex min-h-[88svh] items-center justify-center overflow-hidden pt-32 pb-40 text-center text-primary-foreground lg:min-h-[92vh]">
-        <img src={banners.home.image} alt="Agrosun farms with centre-pivot irrigation" className="absolute inset-0 h-full w-full object-cover animate-[kenburns_14s_ease-out_forwards]" />
+        <img src={(hs?.hero_media_type !== "video" && hs?.hero_media_url) || banners.home.image} alt="Agrosun farms with centre-pivot irrigation" fetchPriority="high" className="absolute inset-0 h-full w-full object-cover animate-[kenburns_14s_ease-out_forwards]" />
+        {hs?.hero_media_type === "video" && hs.hero_media_url && <video src={hs.hero_media_url} poster={banners.home.image} autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 h-full w-full object-cover" />}
         <div className="absolute inset-0 bg-gradient-to-b from-primary-deep/60 via-primary-deep/25 to-primary-deep/80" />
         <div className="relative mx-auto w-full max-w-6xl px-5 animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-[2000ms] fill-mode-both">
           <p className="inline-flex rounded-full border border-primary-foreground/30 bg-primary-foreground/10 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-primary-foreground backdrop-blur sm:text-xs sm:tracking-[0.2em]">{tr(hero.kicker)}</p>
-          <h1 className="mt-6 font-display text-[clamp(2.3rem,5.2vw,4.9rem)] uppercase leading-[1.02] tracking-tight drop-shadow-lg">
-            {tr({ en: "Cultivating quality,", ar: "نزرع الجودة،" })}<br />{tr({ en: "exporting ", ar: "ونصدّر " })}<span className="text-accent">{tr({ en: "excellence.", ar: "التميّز." })}</span>
+          <h1 className="mt-6 font-display text-[clamp(2.3rem,5.2vw,4.9rem)] uppercase leading-[1.02] tracking-tight drop-shadow-lg">{heroTitle ? heroTitle : <>
+            {tr({ en: "Cultivating quality,", ar: "نزرع الجودة،" })}<br />{tr({ en: "exporting ", ar: "ونصدّر " })}<span className="text-accent">{tr({ en: "excellence.", ar: "التميّز." })}</span></>}
           </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base text-primary-foreground/90 sm:text-xl">{tr(hero.title)} <span className="italic text-leaf">{tr(hero.titleAccent)}</span></p>
+          <p className="mx-auto mt-5 max-w-2xl text-base text-primary-foreground/90 sm:text-xl">{heroSub || <>{tr(hero.title)} <span className="italic text-leaf">{tr(hero.titleAccent)}</span></>}</p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link to="/products" className="group inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 font-semibold text-accent-foreground shadow-lift transition hover:-translate-y-0.5 hover:brightness-110 active:scale-95">{t("explore")}<ArrowRight className="h-4 w-4 transition group-hover:translate-x-1 rtl:rotate-180" /></Link>
             <Link to="/contact" className="inline-flex items-center rounded-full border border-primary-foreground/50 bg-primary-foreground/10 px-7 py-3.5 font-semibold backdrop-blur transition hover:bg-primary-foreground/20 active:scale-95">{t("talk")}</Link>

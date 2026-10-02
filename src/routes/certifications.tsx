@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { BadgeCheck, ShieldCheck } from "lucide-react";
 import { banners, certifications, about } from "@/data/site";
 import { useLang } from "@/lib/lang";
+import { useRows } from "@/lib/cms";
 import { PageBanner, Section, Reveal } from "@/components/site/Shell";
 
 const title = "Agrosun Certifications — GLOBALG.A.P., BRC, ISO 22000, ISO 9001, HACCP";
@@ -14,15 +15,17 @@ export const Route = createFileRoute("/certifications")({
 
 function Certs() {
   const { tr } = useLang();
+  const db = useRows("certifications");
+  const list = db && db.length ? db.map((c) => ({ name: c.name, logo: c.logo_url, text: { en: c.description_en ?? "", ar: c.description_ar ?? "" } })) : certifications.map((c) => ({ ...c, logo: "" }));
   return (
     <>
-      <PageBanner image={banners.certifications.image} kicker={tr({ en: "Quality & compliance", ar: "اعتمادات الجودة والامتثال الدولي" })} title={tr({ en: "Full compliance is our passport to global markets", ar: "الامتثال الكامل هو جواز مرورنا للأسواق العالمية" })} />
+      <PageBanner page="certifications" image={banners.certifications.image} kicker={tr({ en: "Quality & compliance", ar: "اعتمادات الجودة والامتثال الدولي" })} title={tr({ en: "Full compliance is our passport to global markets", ar: "الامتثال الكامل هو جواز مرورنا للأسواق العالمية" })} />
       <Section kicker={tr({ en: "Our certificates", ar: "شهاداتنا" })} title={tr({ en: "European food-safety standards at every stage", ar: "نلتزم بمعايير السلامة الغذائية الأوروبية في جميع مراحل الإنتاج" })}>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
-          {certifications.map((c, i) => (
+          {list.map((c, i) => (
             <Reveal key={c.name} delay={i * 100}>
               <div className="group h-full rounded-3xl border-2 border-gold/40 bg-card p-6 text-center transition hover:-translate-y-2 hover:border-gold hover:shadow-lift">
-                <span className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-gold/20 text-gold-foreground transition group-hover:rotate-12 group-hover:scale-110"><BadgeCheck className="h-10 w-10" /></span>
+                <span className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-gold/20 text-gold-foreground transition group-hover:rotate-12 group-hover:scale-110">{c.logo ? <img src={c.logo} alt={c.name} className="h-14 w-14 object-contain" /> : <BadgeCheck className="h-10 w-10" />}</span>
                 <h3 className="mt-5 text-lg font-extrabold text-primary">{c.name}</h3>
                 <p className="mt-1 text-sm text-muted-foreground">{tr(c.text)}</p>
               </div>

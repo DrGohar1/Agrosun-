@@ -1,3 +1,4 @@
+import { useBanner } from "@/lib/cms";
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { Home, Info, Apple, BadgeCheck, Handshake, Mail, Languages, Facebook, Instagram, Linkedin, MapPin, Ship } from "lucide-react";
@@ -146,7 +147,9 @@ export function Footer() {
   );
 }
 
-export function PageBanner({ image, kicker, title, children }: { image: string; kicker: string; title: string; children?: ReactNode }) {
+export function PageBanner({ image, kicker, title, children, page }: { image: string; kicker: string; title: string; children?: ReactNode; page?: string }) {
+  const { lang } = useLang(); const b = useBanner(page ?? "");
+  if (b) { image = b.image_url || image; title = (lang === "ar" ? b.title_ar : b.title_en) || title; kicker = (lang === "ar" ? b.subtitle_ar : b.subtitle_en) || kicker; }
   return (
     <section className="relative flex min-h-[52vh] items-end overflow-hidden pb-14 pt-32 text-primary-foreground">
       <img src={image} alt="" className="absolute inset-0 h-full w-full object-cover animate-[kenburns_12s_ease-out_forwards]" />

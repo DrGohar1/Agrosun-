@@ -59,7 +59,7 @@ function Contact() {
 
   return (
     <>
-      <PageBanner image={banners.contact.image} kicker={tr({ en: "Contact us for export", ar: "تواصل معنا للتصدير" })} title={tr({ en: "Let's grow together", ar: "لننمو معًا" })} />
+      <PageBanner page="contact" image={banners.contact.image} kicker={tr({ en: "Contact us for export", ar: "تواصل معنا للتصدير" })} title={tr({ en: "Let's grow together", ar: "لننمو معًا" })} />
       <Section>
         <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr]">
           <div className="space-y-4">

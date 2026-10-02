@@ -34,7 +34,7 @@ function ExportPage() {
   const { tr, t } = useLang();
   return (
     <>
-      <PageBanner image={banners.products.image} kicker={tr({ en: "Logistics", ar: "اللوجستيات" })} title={tr({ en: "Export routes, packing & shipping", ar: "مسارات التصدير والتعبئة والشحن" })} />
+      <PageBanner page="export" image={banners.products.image} kicker={tr({ en: "Logistics", ar: "اللوجستيات" })} title={tr({ en: "Export routes, packing & shipping", ar: "مسارات التصدير والتعبئة والشحن" })} />
       <Section kicker={tr({ en: "Where we ship", ar: "إلى أين نشحن" })} title={tr({ en: "Export routes", ar: "مسارات التصدير" })}>
         <div className="grid gap-5 md:grid-cols-3">
           {routes.map((r, i) => (

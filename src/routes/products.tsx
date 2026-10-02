@@ -30,7 +30,7 @@ function Products() {
 
   return (
     <>
-      <PageBanner image={banners.products.image} kicker={tr({ en: "Export portfolio", ar: "محفظة المنتجات التصديرية" })} title={tr({ en: "Product gallery", ar: "معرض المنتجات" })} />
+      <PageBanner page="products" image={banners.products.image} kicker={tr({ en: "Export portfolio", ar: "محفظة المنتجات التصديرية" })} title={tr({ en: "Product gallery", ar: "معرض المنتجات" })} />
       <Section>
         <div className="mb-8 flex gap-2 overflow-x-auto pb-2">
           {[{ id: "all" as const, label: { en: t("all"), ar: t("all") } }, ...categories].map((x) => (
