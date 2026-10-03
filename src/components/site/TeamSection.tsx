@@ -20,8 +20,9 @@ export function TeamSection() {
     <Section className="bg-secondary" kicker={t("teamKicker")} title={t("team")}>
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {team.map((m, i) => {
-          const name = lang === "ar" ? m.name_ar || m.name_en : m.name_en;
-          const role = lang === "ar" ? m.title_ar || m.title_en : m.title_en;
+           const row = m as unknown as Record<string, unknown>;
+           const name = String(row[`name_${lang}`] || m.name_en);
+           const role = String(row[`title_${lang}`] || m.title_en);
           const g = groups[m.group_name ?? "leadership"];
           return (
             <Reveal key={m.id} delay={i * 90}>

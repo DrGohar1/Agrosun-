@@ -20,8 +20,7 @@ const inquirySchema = z.object({
 });
 
 export function ProductInquiry({ product, open, onOpenChange }: { product: Product | null; open: boolean; onOpenChange: (open: boolean) => void }) {
-  const { lang, tr } = useLang();
-  const ar = lang === "ar";
+  const { tr, t } = useLang();
   const [form, setForm] = useState({ name: "", company: "", email: "", phone: "", country: "", message: "" });
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
@@ -31,11 +30,11 @@ export function ProductInquiry({ product, open, onOpenChange }: { product: Produ
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     const parsed = inquirySchema.safeParse(form);
-    if (!parsed.success) { toast.error(ar ? "راجع البيانات المطلوبة والبريد الإلكتروني" : "Check the required fields and email"); return; }
+    if (!parsed.success) { toast.error(tr({ en: "Check the required fields and email", ar: "راجع البيانات المطلوبة والبريد الإلكتروني", it: "Controlla i campi obbligatori e l'email", fr: "Vérifiez les champs obligatoires et l'e-mail", de: "Prüfen Sie Pflichtfelder und E-Mail" })); return; }
     setBusy(true);
     const { error } = await supabase.from("contact_messages").insert({ ...parsed.data, product: product.name.en, source: "product" });
     setBusy(false);
-    if (error) { toast.error(ar ? "تعذر الإرسال، حاول مرة أخرى" : "Could not send. Please try again."); return; }
+    if (error) { toast.error(tr({ en: "Could not send. Please try again.", ar: "تعذر الإرسال، حاول مرة أخرى", it: "Invio non riuscito. Riprova.", fr: "Envoi impossible. Réessayez.", de: "Senden fehlgeschlagen. Bitte erneut versuchen." })); return; }
     setDone(true);
   };
   return (
@@ -43,18 +42,18 @@ export function ProductInquiry({ product, open, onOpenChange }: { product: Produ
       <DialogContent className="max-h-[92svh] max-w-2xl overflow-y-auto p-0">
         <div className="border-b border-border bg-secondary px-6 py-5">
           <img src={brand.logo} alt="Agro Sun" className="h-14 w-auto" />
-          <DialogTitle className="mt-4 font-display text-2xl text-primary">{ar ? `استفسار عن ${tr(product.name)}` : `Enquire about ${tr(product.name)}`}</DialogTitle>
+           <DialogTitle className="mt-4 font-display text-2xl text-primary">{t("enquire")}: {tr(product.name)}</DialogTitle>
         </div>
-        {done ? <div className="px-7 py-14 text-center"><CheckCircle2 className="mx-auto h-14 w-14 text-leaf" /><h3 className="mt-4 font-display text-2xl text-primary">{ar ? "تم استلام استفسارك" : "Enquiry received"}</h3><p className="mt-2 text-muted-foreground">{ar ? "سيتواصل معك فريق التصدير في أقرب وقت." : "Our export team will contact you shortly."}</p></div> :
+         {done ? <div className="px-7 py-14 text-center"><CheckCircle2 className="mx-auto h-14 w-14 text-leaf" /><h3 className="mt-4 font-display text-2xl text-primary">{t("enquiryReceived")}</h3><p className="mt-2 text-muted-foreground">{t("replySoon")}</p></div> :
           <form onSubmit={submit} className="grid gap-4 p-6 sm:grid-cols-2">
-            <Input required maxLength={100} placeholder={ar ? "الاسم بالكامل *" : "Full name *"} value={form.name} onChange={update("name")} />
-            <Input maxLength={120} placeholder={ar ? "الشركة" : "Company"} value={form.company} onChange={update("company")} />
-            <Input required type="email" maxLength={255} placeholder={ar ? "البريد الإلكتروني *" : "Email *"} value={form.email} onChange={update("email")} />
-            <Input type="tel" maxLength={30} placeholder={ar ? "الهاتف / واتساب" : "Phone / WhatsApp"} value={form.phone} onChange={update("phone")} />
-            <Input maxLength={60} placeholder={ar ? "الدولة" : "Country"} value={form.country} onChange={update("country")} />
+             <Input required maxLength={100} placeholder={t("fullName")} value={form.name} onChange={update("name")} />
+             <Input maxLength={120} placeholder={t("company")} value={form.company} onChange={update("company")} />
+             <Input required type="email" maxLength={255} placeholder={t("email")} value={form.email} onChange={update("email")} />
+             <Input type="tel" maxLength={30} placeholder={t("phone")} value={form.phone} onChange={update("phone")} />
+             <Input maxLength={60} placeholder={t("country")} value={form.country} onChange={update("country")} />
             <div className="flex h-9 items-center rounded-md border border-input bg-muted px-3 text-sm font-semibold text-primary">{tr(product.name)}</div>
-            <Textarea required maxLength={2000} rows={4} placeholder={ar ? "الكميات والوجهة والتوقيت المطلوب *" : "Volume, destination and timing *"} value={form.message} onChange={update("message")} className="sm:col-span-2" />
-            <Button disabled={busy} size="lg" className="sm:col-span-2">{busy ? (ar ? "جارٍ الإرسال…" : "Sending…") : <><Send />{ar ? "إرسال الاستفسار" : "Send enquiry"}</>}</Button>
+             <Textarea required maxLength={2000} rows={4} placeholder={tr({ en: "Volume, destination and timing *", ar: "الكميات والوجهة والتوقيت المطلوب *", it: "Volume, destinazione e tempistiche *", fr: "Volume, destination et calendrier *", de: "Menge, Ziel und Zeitplan *" })} value={form.message} onChange={update("message")} className="sm:col-span-2" />
+             <Button disabled={busy} size="lg" className="sm:col-span-2">{busy ? t("sending") : <><Send />{t("sendMessage")}</>}</Button>
           </form>}
       </DialogContent>
     </Dialog>

@@ -43,9 +43,9 @@ export const banners = {
 };
 
 export const hero = {
-  kicker: { en: "Egyptian growers & exporters · since 1995", ar: "مزارعون ومصدّرون مصريون · منذ 1995" },
-  title: { en: "From Egyptian soil", ar: "من أرض مصر" },
-  titleAccent: { en: "to the world's tables.", ar: "إلى موائد العالم." },
+  kicker: { en: "Egyptian growers & exporters · since 1995", ar: "مزارعون ومصدّرون مصريون · منذ 1995", it: "Coltivatori ed esportatori egiziani · dal 1995", fr: "Producteurs et exportateurs égyptiens · depuis 1995", de: "Ägyptische Erzeuger & Exporteure · seit 1995" },
+  title: { en: "From Egyptian soil", ar: "من أرض مصر", it: "Dalla terra egiziana", fr: "De la terre égyptienne", de: "Von ägyptischen Feldern" },
+  titleAccent: { en: "to the world's tables.", ar: "إلى موائد العالم.", it: "alle tavole del mondo.", fr: "aux tables du monde.", de: "auf die Tische der Welt." },
   sub: {
     en: "Agrosun Group — your strategic partner for sustainable growth. Three decades of farming, packing, IQF freezing and export to the EU, UK and USA.",
     ar: "مجموعة أجروصن — شريككم الاستراتيجي للنمو المستدام. ثلاثة عقود من الزراعة والفرز والتجميد السريع والتصدير إلى أوروبا والمملكة المتحدة والولايات المتحدة.",
@@ -100,7 +100,7 @@ export const categories: { id: Category; label: L }[] = [
   { id: "processed", label: { en: "Processed", ar: "منتجات مصنّعة" } },
 ];
 
-export type Product = { id: string; category: Category; name: L; text: L; specs?: { en: string[]; ar: string[] }; packaging?: L; image: string; featured?: boolean };
+export type Product = { id: string; category: Category; name: L; text: L; specs?: { en: string[]; ar: string[]; it?: string[]; fr?: string[]; de?: string[] }; packaging?: L; image: string; featured?: boolean };
 
 export const products: Product[] = [
   { id: "grapes", category: "fresh", featured: true, image: pdfGrapes.url, name: { en: "Fresh Grapes", ar: "عنب فريش" }, text: { en: "Our flagship export product — prepared to standard specifications with exceptional care at every stage.", ar: "فخر إنتاجنا والمنتج الرئيسي للتصدير، مجهز بمواصفات قياسية وعناية فائقة في كل مرحلة." } },

@@ -30,6 +30,19 @@ const ui = {
   team: { en: "Leadership & Export Team", ar: "القيادة وفريق التصدير", it: "Direzione e team export", fr: "Direction et équipe export", de: "Führung & Export-Team" },
   teamKicker: { en: "People behind every shipment", ar: "الفريق وراء كل شحنة", it: "Le persone dietro ogni spedizione", fr: "L'équipe derrière chaque expédition", de: "Die Menschen hinter jeder Lieferung" },
   contactPerson: { en: "Contact", ar: "تواصل", it: "Contatta", fr: "Contacter", de: "Kontakt" },
+  followUs: { en: "Follow us", ar: "تابعنا", it: "Seguici", fr: "Suivez-nous", de: "Folgen Sie uns" },
+  previous: { en: "Previous", ar: "السابق", it: "Precedente", fr: "Précédent", de: "Zurück" },
+  next: { en: "Next", ar: "التالي", it: "Successivo", fr: "Suivant", de: "Weiter" },
+  sendAnother: { en: "Send another", ar: "إرسال رسالة أخرى", it: "Invia un altro", fr: "Envoyer un autre", de: "Weitere senden" },
+  sending: { en: "Sending…", ar: "جارٍ الإرسال…", it: "Invio…", fr: "Envoi…", de: "Wird gesendet…" },
+  sendMessage: { en: "Send message", ar: "إرسال", it: "Invia messaggio", fr: "Envoyer", de: "Nachricht senden" },
+  fullName: { en: "Full name *", ar: "الاسم بالكامل *", it: "Nome completo *", fr: "Nom complet *", de: "Vollständiger Name *" },
+  company: { en: "Company", ar: "الشركة", it: "Azienda", fr: "Entreprise", de: "Unternehmen" },
+  email: { en: "Email *", ar: "البريد الإلكتروني *", it: "Email *", fr: "E-mail *", de: "E-Mail *" },
+  phone: { en: "Phone / WhatsApp", ar: "الهاتف / واتساب", it: "Telefono / WhatsApp", fr: "Téléphone / WhatsApp", de: "Telefon / WhatsApp" },
+  country: { en: "Country", ar: "الدولة", it: "Paese", fr: "Pays", de: "Land" },
+  enquiryReceived: { en: "Enquiry received", ar: "تم استلام استفسارك", it: "Richiesta ricevuta", fr: "Demande reçue", de: "Anfrage erhalten" },
+  replySoon: { en: "Our export team will contact you shortly.", ar: "سيتواصل معك فريق التصدير في أقرب وقت.", it: "Il nostro team export ti contatterà a breve.", fr: "Notre équipe export vous contactera rapidement.", de: "Unser Export-Team meldet sich in Kürze." },
 } satisfies Record<string, Row>;
 
 type Ctx = { lang: Lang; setLang: (l: Lang) => void; t: (k: keyof typeof ui) => string; tr: (v: L) => string; rtl: boolean };

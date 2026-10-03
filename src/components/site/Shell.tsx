@@ -1,7 +1,7 @@
 import { useBanner } from "@/lib/cms";
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
-import { Home, Info, Apple, BadgeCheck, Handshake, Mail, Languages, Facebook, Instagram, Linkedin, MapPin, Ship } from "lucide-react";
+import { Home, Info, Apple, BadgeCheck, Handshake, Mail, Languages, Facebook, Instagram, Linkedin, MapPin, Ship, MessageCircle } from "lucide-react";
 import { brand, banners, contact } from "@/data/site";
 import { useLang, languages } from "@/lib/lang";
 import { useLive } from "@/lib/live";
@@ -19,7 +19,7 @@ const nav = [
   { to: "/contact", key: "contact", icon: Mail },
 ] as const;
 
-type Social = { facebook_url: string; instagram_url: string; linkedin_url: string; maps_url: string };
+type Social = { facebook_url: string; instagram_url: string; linkedin_url: string; maps_url: string; whatsapp?: string };
 function useSocial() {
   const s: Social | null = useLive().settings;
   return {
@@ -27,6 +27,7 @@ function useSocial() {
     instagram: s?.instagram_url || contact.social.instagram,
     linkedin: s?.linkedin_url || contact.social.linkedin,
     map: s?.maps_url || contact.map,
+    whatsapp: s?.whatsapp || "",
   };
 }
 
@@ -68,8 +69,8 @@ export function TopBar() {
   useEffect(() => { const f = () => setScrolled(window.scrollY > 30); f(); addEventListener("scroll", f, { passive: true }); return () => removeEventListener("scroll", f); }, []);
   return (
     <header className={`fixed inset-x-0 top-0 z-50 transition-all ${scrolled ? "py-2" : "py-4"}`}>
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4">
-        <div className="flex w-full items-center justify-between rounded-2xl border border-border/60 bg-background/90 px-4 py-2 shadow-lift backdrop-blur">
+      <div className="mx-auto max-w-7xl px-3 sm:px-4">
+        <div className="grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-lg border border-border/60 bg-background/95 px-3 py-2 shadow-lift backdrop-blur sm:px-4 lg:flex lg:justify-between">
           <Link to="/"><Logo className="h-10 sm:h-12" /></Link>
           <nav className="hidden items-center gap-1 lg:flex">
             {nav.map((n) => (
@@ -79,17 +80,18 @@ export function TopBar() {
               </Link>
             ))}
           </nav>
-          <div className="flex items-center gap-2">
-            <div className="hidden items-center gap-1 xl:flex">
+          <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+            <div className="flex items-center gap-0.5">
               <a href={social.facebook || "#"} target="_blank" rel="noreferrer" aria-label="Facebook" className="grid h-8 w-8 place-items-center text-muted-foreground hover:text-accent"><Facebook className="h-4 w-4" /></a>
               <a href={social.instagram || "#"} target="_blank" rel="noreferrer" aria-label="Instagram" className="grid h-8 w-8 place-items-center text-muted-foreground hover:text-accent"><Instagram className="h-4 w-4" /></a>
               <a href={social.linkedin || "#"} target="_blank" rel="noreferrer" aria-label="LinkedIn" className="grid h-8 w-8 place-items-center text-muted-foreground hover:text-accent"><Linkedin className="h-4 w-4" /></a>
               <a href={social.map} target="_blank" rel="noreferrer" aria-label="Map" className="grid h-8 w-8 place-items-center text-muted-foreground hover:text-accent"><MapPin className="h-4 w-4" /></a>
+              {social.whatsapp && <a href={`https://wa.me/${social.whatsapp.replace(/\D/g, "")}`} target="_blank" rel="noreferrer" aria-label="WhatsApp" className="hidden h-8 w-8 place-items-center text-muted-foreground hover:text-accent sm:grid"><MessageCircle className="h-4 w-4" /></a>}
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="rounded-full" aria-label="Language">
-                  <span className="text-base leading-none">{languages.find((l) => l.code === lang)?.flag}</span><span className="hidden uppercase sm:inline">{lang}</span><Languages className="h-4 w-4 opacity-60" />
+                <Button variant="outline" size="sm" className="rounded-md px-2 sm:px-3" aria-label="Language">
+                  <span className="text-base leading-none">{languages.find((l) => l.code === lang)?.flag}</span><span className="hidden uppercase sm:inline">{lang}</span><Languages className="hidden h-4 w-4 opacity-60 sm:block" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-44">
@@ -108,14 +110,14 @@ export function BottomNav() {
   const { t } = useLang();
   return (
     <nav className="fixed inset-x-0 bottom-0 z-50 px-3 lg:hidden pb-[max(env(safe-area-inset-bottom),0.75rem)] lg:pb-4">
-      <div className="mx-auto flex max-w-xl items-stretch justify-between gap-1 rounded-2xl border border-primary-foreground/10 bg-primary-deep/95 p-1.5 shadow-lift backdrop-blur">
+       <div className="mx-auto grid max-w-xl grid-cols-7 items-stretch gap-0.5 rounded-2xl border border-primary-foreground/10 bg-primary-deep/95 p-1.5 shadow-lift backdrop-blur">
         {nav.map(({ to, key, icon: Icon }) => (
           <Link key={to} to={to} activeOptions={{ exact: true }}
             activeProps={{ className: "bg-accent text-accent-foreground" }}
             inactiveProps={{ className: "text-primary-foreground/70 hover:text-primary-foreground" }}
-            className="flex flex-1 flex-col items-center gap-0.5 rounded-xl px-1 py-2 text-[10px] font-semibold transition sm:text-xs">
+             className="flex min-w-0 flex-col items-center gap-0.5 overflow-hidden rounded-xl px-0.5 py-2 text-[8px] font-semibold transition sm:text-xs">
             <Icon className="h-5 w-5" />
-            <span className="truncate">{t(key)}</span>
+             <span className="w-full truncate text-center">{t(key)}</span>
           </Link>
         ))}
       </div>
@@ -134,8 +136,9 @@ function DevCredit() {
 export function Footer() {
   const { tr, t, lang } = useLang();
   const st = useLive().settings;
-  const slogan = st && (lang === "ar" ? st.slogan_ar : st.slogan_en);
-  const offices = st?.hq_address ? [{ k: { en: "Headquarters", ar: "المقر الرئيسي", it: "Sede centrale", fr: "Siège", de: "Hauptsitz" }, v: st.hq_address }, { k: { en: "Packhouse — Badr", ar: "محطة التعبئة — بدر", it: "Magazzino — Badr", fr: "Station — Badr", de: "Packhaus — Badr" }, v: st.packhouse_address ?? "" }, { k: { en: "IQF complex — Sadat City", ar: "مجمع IQF — السادات", it: "Impianto IQF — Sadat", fr: "Usine IQF — Sadate", de: "IQF-Werk — Sadat" }, v: st.iqf_address ?? "" }].filter((o) => o.v) : null;
+  const local = (base: string) => st ? String((st as unknown as Record<string, unknown>)[`${base}_${lang}`] || (st as unknown as Record<string, unknown>)[`${base}_en`] || "") : "";
+  const slogan = local("slogan");
+  const offices = st?.hq_address ? [{ k: { en: "Headquarters", ar: "المقر الرئيسي", it: "Sede centrale", fr: "Siège", de: "Hauptsitz" }, v: lang === "ar" ? st.hq_address : local("hq_address") || st.hq_address }, { k: { en: "Packhouse — Badr", ar: "محطة التعبئة — بدر", it: "Magazzino — Badr", fr: "Station — Badr", de: "Packhaus — Badr" }, v: lang === "ar" ? st.packhouse_address : local("packhouse_address") || st.packhouse_address }, { k: { en: "IQF complex — Sadat City", ar: "مجمع IQF — السادات", it: "Impianto IQF — Sadat", fr: "Usine IQF — Sadate", de: "IQF-Werk — Sadat" }, v: lang === "ar" ? st.iqf_address : local("iqf_address") || st.iqf_address }].filter((o) => o.v) : null;
   const email = st?.email || contact.email;
   return (
     <footer className="bg-primary-deep pb-32 pt-16 text-primary-foreground lg:pb-10">
@@ -161,10 +164,10 @@ export function Footer() {
 
 export function PageBanner({ image, kicker, title, children, page }: { image: string; kicker: string; title: string; children?: ReactNode; page?: string }) {
   const { lang } = useLang(); const b = useBanner(page ?? "");
-  if (b) { image = b.image_url || image; title = (lang === "ar" ? b.title_ar : lang === "en" ? b.title_en : "") || title; kicker = (lang === "ar" ? b.subtitle_ar : lang === "en" ? b.subtitle_en : "") || kicker; }
+  if (b) { const row = b as unknown as Record<string, unknown>; image = b.image_url || image; title = String(row[`title_${lang}`] || b.title_en || title); kicker = String(row[`subtitle_${lang}`] || b.subtitle_en || kicker); }
   return (
     <section className="relative flex min-h-[52vh] items-end overflow-hidden pb-14 pt-32 text-primary-foreground">
-      <img src={image} alt="" className="absolute inset-0 h-full w-full object-cover animate-[kenburns_12s_ease-out_forwards]" />
+       {b?.media_type === "video" ? <video src={image} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" /> : <img src={image} alt="" className="absolute inset-0 h-full w-full object-cover animate-[kenburns_12s_ease-out_forwards]" />}
       <div className="absolute inset-0 bg-hero" />
       <img src={brand.mark} alt="" aria-hidden className="pointer-events-none absolute -bottom-10 end-4 h-64 opacity-10" />
       <div className="relative mx-auto w-full max-w-7xl px-5 animate-in fade-in slide-in-from-bottom-4 duration-700">

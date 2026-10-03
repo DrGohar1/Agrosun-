@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Mail, MapPin, Send, CheckCircle2 } from "lucide-react";
 import { banners, contact, products } from "@/data/site";
 import { useLang } from "@/lib/lang";
+import { Button } from "@/components/ui/button";
 import { PageBanner, Section } from "@/components/site/Shell";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -28,7 +29,7 @@ const schema = z.object({
 });
 
 function Contact() {
-  const { tr, lang } = useLang();
+  const { tr, t } = useLang();
   const { product } = Route.useSearch();
   const [f, setF] = useState({ name: "", company: "", email: "", phone: "", country: "", product: product ?? "", message: "" });
   const [busy, setBusy] = useState(false);
@@ -48,7 +49,6 @@ function Contact() {
     toast.success(tr({ en: "Message sent — our export team will reply soon.", ar: "تم الإرسال — سيرد عليك فريق التصدير قريبًا." }));
   };
 
-  const L = (en: string, ar: string) => (lang === "ar" ? ar : en);
   const input = (k: keyof typeof f) => `peer w-full rounded-2xl border bg-background px-4 pb-2.5 pt-6 text-sm transition focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/10 ${err[k] ? "border-destructive" : "border-input"}`;
   const Field = ({ k, label, type = "text", max }: { k: keyof typeof f; label: string; type?: string; max: number }) => (
     <label className="relative block">
@@ -70,33 +70,33 @@ function Contact() {
             {done ? (
               <div className="py-16 text-center animate-in zoom-in-95 fade-in">
                 <CheckCircle2 className="mx-auto h-16 w-16 text-leaf" />
-                <h2 className="mt-4 font-display text-3xl text-primary">{L("Thank you!", "شكرًا لك!")}</h2>
-                <p className="mt-2 text-muted-foreground">{L("We received your message and will reply by email.", "استلمنا رسالتك وسنرد عليك عبر البريد.")}</p>
-                <button onClick={() => { setDone(false); setF({ ...f, message: "" }); }} className="mt-6 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground">{L("Send another", "إرسال رسالة أخرى")}</button>
+                 <h2 className="mt-4 font-display text-3xl text-primary">{t("enquiryReceived")}</h2>
+                 <p className="mt-2 text-muted-foreground">{t("replySoon")}</p>
+                 <Button onClick={() => { setDone(false); setF({ ...f, message: "" }); }} className="mt-6">{t("sendAnother")}</Button>
               </div>
             ) : (
               <form onSubmit={submit} className="grid gap-4" noValidate>
-                <h2 className="font-display text-3xl text-primary">{L("Send us an enquiry", "أرسل استفسارك")}</h2>
+                 <h2 className="font-display text-3xl text-primary">{tr({ en: "Send us an enquiry", ar: "أرسل استفسارك", it: "Invia una richiesta", fr: "Envoyez votre demande", de: "Senden Sie Ihre Anfrage" })}</h2>
                 <div className="grid gap-4 sm:grid-cols-2">
-                  {Field({ k: "name", label: L("Full name *", "الاسم بالكامل *"), max: 100 })}
-                  {Field({ k: "company", label: L("Company", "الشركة"), max: 120 })}
-                  {Field({ k: "email", label: L("Email *", "البريد الإلكتروني *"), type: "email", max: 255 })}
-                  {Field({ k: "phone", label: L("Phone / WhatsApp", "الهاتف / واتساب"), type: "tel", max: 30 })}
-                  {Field({ k: "country", label: L("Country", "الدولة"), max: 60 })}
+                   {Field({ k: "name", label: t("fullName"), max: 100 })}
+                   {Field({ k: "company", label: t("company"), max: 120 })}
+                   {Field({ k: "email", label: t("email"), type: "email", max: 255 })}
+                   {Field({ k: "phone", label: t("phone"), type: "tel", max: 30 })}
+                   {Field({ k: "country", label: t("country"), max: 60 })}
                   <select value={f.product} onChange={set("product")} className="w-full rounded-2xl border border-input bg-background px-4 py-4 text-sm focus:border-accent focus:outline-none">
-                    <option value="">{L("Product of interest", "المنتج المطلوب")}</option>
+                     <option value="">{tr({ en: "Product of interest", ar: "المنتج المطلوب", it: "Prodotto di interesse", fr: "Produit recherché", de: "Gewünschtes Produkt" })}</option>
                     {products.map((p) => <option key={p.id} value={p.name.en}>{tr(p.name)}</option>)}
                   </select>
                 </div>
                 <label className="relative block">
                   <textarea value={f.message} onChange={set("message")} maxLength={2000} rows={5} placeholder=" " className={input("message")} />
-                  <span className="pointer-events-none absolute start-4 top-4 text-sm text-muted-foreground transition-all peer-focus:top-1.5 peer-focus:text-[11px] peer-focus:text-accent peer-[:not(:placeholder-shown)]:top-1.5 peer-[:not(:placeholder-shown)]:text-[11px]">{L("Message — volumes, destination, timing *", "الرسالة — الكميات، الوجهة، التوقيت *")}</span>
+                   <span className="pointer-events-none absolute start-4 top-4 text-sm text-muted-foreground transition-all peer-focus:top-1.5 peer-focus:text-[11px] peer-focus:text-accent peer-[:not(:placeholder-shown)]:top-1.5 peer-[:not(:placeholder-shown)]:text-[11px]">{tr({ en: "Message — volumes, destination, timing *", ar: "الرسالة — الكميات، الوجهة، التوقيت *", it: "Messaggio — volumi, destinazione, tempistiche *", fr: "Message — volumes, destination, calendrier *", de: "Nachricht — Mengen, Ziel, Zeitplan *" })}</span>
                 </label>
-                {Object.keys(err).length > 0 && <p className="text-sm text-destructive">{L("Please complete the required fields with a valid email.", "من فضلك أكمل الحقول المطلوبة ببريد صحيح.")}</p>}
-                <button disabled={busy} className="group inline-flex items-center justify-center gap-2 rounded-full bg-accent px-8 py-4 font-semibold text-accent-foreground shadow-lift transition hover:brightness-110 disabled:opacity-60">
+                 {Object.keys(err).length > 0 && <p className="text-sm text-destructive">{tr({ en: "Please complete the required fields with a valid email.", ar: "من فضلك أكمل الحقول المطلوبة ببريد صحيح.", it: "Completa i campi richiesti con un'email valida.", fr: "Complétez les champs obligatoires avec un e-mail valide.", de: "Bitte füllen Sie die Pflichtfelder mit einer gültigen E-Mail aus." })}</p>}
+                 <Button disabled={busy} size="lg" className="group">
                   {busy ? <span className="h-5 w-5 animate-spin rounded-full border-2 border-accent-foreground border-t-transparent" /> : <Send className="h-5 w-5 transition group-hover:translate-x-1 rtl:rotate-180" />}
-                  {L("Send message", "إرسال")}
-                </button>
+                   {busy ? t("sending") : t("sendMessage")}
+                 </Button>
               </form>
             )}
           </div>

@@ -16,13 +16,13 @@ export const Route = createFileRoute("/about")({
   component: About,
 });
 
-type Fac = { name: { en: string; ar: string }; place: { en: string; ar: string }; image: string; points: { en: string[]; ar: string[] }; gallery: string[] };
+type Fac = { name: { en: string; ar: string; it?: string; fr?: string; de?: string }; place: { en: string; ar: string; it?: string; fr?: string; de?: string }; image: string; points: { en: string[]; ar: string[]; it?: string[]; fr?: string[]; de?: string[] }; gallery: string[] };
 function About() {
   const { tr } = useLang();
   const [facs, setFacs] = useState<Fac[]>(facilities.map((f) => ({ ...f, gallery: [f.image] })));
   const [open, setOpen] = useState<Fac | null>(null);
   const { version } = useLive();
-  useEffect(() => { void (supabase as any).from("facilities").select("*").eq("visible", true).order("sort_order").then(({ data }: { data: any[] | null }) => { if (data?.length) setFacs(data.map((d) => ({ name: { en: d.name_en, ar: d.name_ar || d.name_en }, place: { en: d.place_en, ar: d.place_ar || d.place_en }, image: d.cover_url || d.gallery?.[0] || "", points: { en: d.points_en.split("\n").filter(Boolean), ar: (d.points_ar || d.points_en).split("\n").filter(Boolean) }, gallery: (d.gallery ?? []).filter(Boolean) }))); }); }, [version]);
+  useEffect(() => { void (supabase as any).from("facilities").select("*").eq("visible", true).order("sort_order").then(({ data }: { data: any[] | null }) => { if (data?.length) setFacs(data.map((d) => ({ name: { en: d.name_en, ar: d.name_ar || d.name_en, it: d.name_it, fr: d.name_fr, de: d.name_de }, place: { en: d.place_en, ar: d.place_ar || d.place_en, it: d.place_it, fr: d.place_fr, de: d.place_de }, image: d.cover_url || d.gallery?.[0] || "", points: { en: d.points_en.split("\n").filter(Boolean), ar: (d.points_ar || d.points_en).split("\n").filter(Boolean), it: d.points_it?.split("\n").filter(Boolean), fr: d.points_fr?.split("\n").filter(Boolean), de: d.points_de?.split("\n").filter(Boolean) }, gallery: (d.gallery ?? []).filter(Boolean) }))); }); }, [version]);
   return (
     <>
       <PageBanner page="about" image={banners.about.image} kicker={tr({ en: "About the group", ar: "نبذة عن المجموعة" })} title={tr({ en: "Experience spanning three decades", ar: "خبرة تمتد لثلاثة عقود" })} />
@@ -33,13 +33,13 @@ function About() {
           ))}
         </div>
       </Section>
-      <Section className="bg-secondary" kicker={tr({ en: "Group structure", ar: "هيكل المجموعة" })} title="Agrosun Group">
-        <p className="-mt-6 mb-8 text-muted-foreground">{tr({ en: "Strategy, finance & international relations", ar: "الاستراتيجية، التمويل، العلاقات الدولية" })}</p>
+       <Section className="bg-secondary" kicker={tr({ en: "Group structure", ar: "هيكل المجموعة", it: "Struttura del gruppo", fr: "Structure du groupe", de: "Konzernstruktur" })} title="Agrosun Group">
+         <p className="-mt-6 mb-8 text-muted-foreground">{tr({ en: "Strategy, finance & international relations", ar: "الاستراتيجية، التمويل، العلاقات الدولية", it: "Strategia, finanza e relazioni internazionali", fr: "Stratégie, finance et relations internationales", de: "Strategie, Finanzen und internationale Beziehungen" })}</p>
         <div className="grid gap-5 md:grid-cols-2">
           {about.structure.map((s) => (
-            <div key={s.name} className="rounded-3xl bg-primary p-7 text-primary-foreground">
-              <h3 className="text-xl font-bold">{s.name}</h3><p className="text-sm text-leaf">{s.ar}</p>
-              <ul className="mt-4 space-y-2">{tr({ en: s.items.en.join("|"), ar: s.items.ar.join("|") }).split("|").map((x) => <li key={x} className="flex gap-2"><CheckCircle2 className="h-5 w-5 shrink-0 text-leaf" />{x}</li>)}</ul>
+             <div key={s.name} className="rounded-lg bg-primary p-7 text-primary-foreground">
+               <h3 className="text-xl font-bold">{tr({ en: s.name, ar: s.ar })}</h3>
+               <ul className="mt-4 space-y-2">{tr({ en: s.items.en.join("|"), ar: s.items.ar.join("|") }).split("|").map((x) => <li key={x} className="flex gap-2"><CheckCircle2 className="h-5 w-5 shrink-0 text-leaf" />{x}</li>)}</ul>
             </div>
           ))}
         </div>
@@ -53,8 +53,8 @@ function About() {
                 <div className="p-7">
                   <h3 className="font-display text-2xl text-primary">{tr(f.name)}</h3>
                   <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground"><MapPin className="h-4 w-4 text-accent" />{tr(f.place)}</p>
-                  <ul className="mt-4 space-y-2 text-sm">{tr({ en: f.points.en.join("|"), ar: f.points.ar.join("|") }).split("|").map((x) => <li key={x} className="flex gap-2"><CheckCircle2 className="h-5 w-5 shrink-0 text-leaf" />{x}</li>)}</ul>
-                  <span className="mt-4 inline-block text-sm font-semibold text-accent">{tr({ en: `View ${f.gallery.length} photos →`, ar: `شاهد ${f.gallery.length} صور ←` })}</span>
+                   <ul className="mt-4 space-y-2 text-sm">{tr({ en: f.points.en.join("|"), ar: f.points.ar.join("|"), it: (f.points.it ?? f.points.en).join("|"), fr: (f.points.fr ?? f.points.en).join("|"), de: (f.points.de ?? f.points.en).join("|") }).split("|").map((x) => <li key={x} className="flex gap-2"><CheckCircle2 className="h-5 w-5 shrink-0 text-leaf" />{x}</li>)}</ul>
+                   <span className="mt-4 inline-block text-sm font-semibold text-accent">{tr({ en: `View ${f.gallery.length} photos →`, ar: `شاهد ${f.gallery.length} صور ←`, it: `Vedi ${f.gallery.length} foto →`, fr: `Voir ${f.gallery.length} photos →`, de: `${f.gallery.length} Fotos ansehen →` })}</span>
                 </div>
               </button>
             </Reveal>

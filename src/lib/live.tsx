@@ -21,10 +21,10 @@ function toProduct(r: DbProduct): Product {
     category: (["fresh", "iqf", "processed"].includes(r.category) ? r.category : "fresh") as Category,
     featured: r.featured,
     image: r.image_url || base?.image || "",
-    name: { en: r.name_en, ar: r.name_ar || r.name_en },
-    text: { en: r.description_en || base?.text.en || "", ar: r.description_ar || base?.text.ar || r.description_en || "" },
-    ...(specs.length ? { specs: { en: specs, ar: specs } } : base?.specs ? { specs: base.specs } : {}),
-    ...(r.packaging ? { packaging: { en: r.packaging, ar: r.packaging } } : base?.packaging ? { packaging: base.packaging } : {}),
+    name: { en: r.name_en, ar: r.name_ar || r.name_en, it: r.name_it, fr: r.name_fr, de: r.name_de },
+    text: { en: r.description_en || base?.text.en || "", ar: r.description_ar || base?.text.ar || r.description_en || "", it: r.description_it, fr: r.description_fr, de: r.description_de },
+    ...(specs.length ? { specs: { en: specs, ar: specs, it: specs, fr: specs, de: specs } } : base?.specs ? { specs: base.specs } : {}),
+    ...(r.packaging ? { packaging: { en: r.packaging, ar: r.packaging, it: r.packaging_it, fr: r.packaging_fr, de: r.packaging_de } } : base?.packaging ? { packaging: base.packaging } : {}),
   };
 }
 

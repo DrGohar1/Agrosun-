@@ -47,7 +47,7 @@ function Products() {
               <img src={p.image} alt={tr(p.name)} loading="lazy" className={`w-full object-cover transition duration-700 group-hover:scale-110 ${i % 3 === 0 ? "aspect-[4/5]" : "aspect-[4/3]"}`} />
               <div className="absolute inset-0 bg-gradient-to-t from-primary-deep/90 via-transparent to-transparent opacity-90" />
               <div className="absolute inset-x-0 bottom-0 p-5 text-primary-foreground">
-                <span className="rounded-full bg-accent px-2.5 py-0.5 text-[10px] font-bold uppercase">{tr(categories.find((c) => c.id === p.category)!.label)}</span>
+                <span className="rounded-full bg-accent px-2.5 py-0.5 text-[10px] font-bold uppercase">{tr(categories.find((c) => c.id === p.category)?.label ?? { en: "Fresh Produce", ar: "الحاصلات الطازجة", it: "Prodotti freschi", fr: "Produits frais", de: "Frischware" })}</span>
                 <h3 className="mt-2 font-display text-2xl">{tr(p.name)}</h3>
                 <p className="mt-1 line-clamp-2 max-h-0 text-sm text-primary-foreground/80 opacity-0 transition-all duration-500 group-hover:max-h-12 group-hover:opacity-100">{tr(p.text)}</p>
               </div>
@@ -67,7 +67,7 @@ function Products() {
               <div className="p-7">
                 <DialogTitle className="font-display text-3xl text-primary">{tr(p.name)}</DialogTitle>
                 <p className="mt-3 text-muted-foreground">{tr(p.text)}</p>
-                {p.specs && <ul className="mt-4 space-y-2 text-sm">{(p.specs[lang === "ar" ? "ar" : "en"] ?? []).map((s) => <li key={s} className="flex gap-2"><CheckCircle2 className="h-5 w-5 shrink-0 text-leaf" />{s}</li>)}</ul>}
+                {p.specs && <ul className="mt-4 space-y-2 text-sm">{(p.specs[lang] ?? p.specs.en).map((s) => <li key={s} className="flex gap-2"><CheckCircle2 className="h-5 w-5 shrink-0 text-leaf" />{s}</li>)}</ul>}
                 {p.packaging && <div className="mt-4 flex gap-2 rounded-2xl bg-muted p-4 text-sm"><Package className="h-5 w-5 shrink-0 text-accent" /><div><b>{t("packaging")}:</b> {tr(p.packaging)}</div></div>}
                 <Button onClick={() => setInquiry(true)} className="mt-6 rounded-full px-6">{t("enquire")}</Button>
               </div>

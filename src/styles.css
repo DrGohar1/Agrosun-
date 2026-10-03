@@ -63,31 +63,31 @@
   --color-gold: var(--gold);
   --color-gold-foreground: var(--gold-foreground);
   --color-leaf: var(--leaf);
-  --font-sans: "Plus Jakarta Sans", "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Fraunces", "IBM Plex Sans Arabic", Georgia, serif;
+  --font-sans: "Manrope", "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Sora", "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
 :root {
-  --radius: 0.875rem;
+  --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.22 0.03 165);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.22 0.03 165);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.22 0.03 165);
-  --primary: oklch(0.33 0.06 163);
+  --primary: oklch(0.38 0.075 163);
   --primary-foreground: oklch(0.985 0.005 160);
-  --primary-deep: oklch(0.22 0.045 165);
-  --secondary: oklch(0.984 0.003 247.858);
+  --primary-deep: oklch(0.25 0.06 164);
+  --secondary: oklch(0.96 0.025 145);
   --secondary-foreground: oklch(0.33 0.06 163);
   --muted: oklch(0.968 0.007 200);
   --muted-foreground: oklch(0.5 0.025 170);
-  --accent: oklch(0.46 0.17 18);
+  --accent: oklch(0.5 0.18 18);
   --accent-foreground: oklch(0.99 0 0);
   --gold: oklch(0.78 0.12 82);
   --gold-foreground: oklch(0.25 0.04 80);
-  --leaf: oklch(0.72 0.15 145);
+  --leaf: oklch(0.69 0.15 145);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
   --border: oklch(0.92 0.01 170);
@@ -106,8 +106,8 @@
   --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
-  --gradient-hero: linear-gradient(180deg, oklch(0.22 0.045 165 / 0.55) 0%, oklch(0.22 0.045 165 / 0.75) 55%, oklch(0.18 0.04 165 / 0.97) 100%);
-  --shadow-lift: 0 24px 48px -24px oklch(0.22 0.045 165 / 0.35);
+  --gradient-hero: linear-gradient(180deg, oklch(0.25 0.06 164 / 0.32) 0%, oklch(0.25 0.06 164 / 0.62) 58%, oklch(0.2 0.05 164 / 0.94) 100%);
+  --shadow-lift: 0 18px 42px -22px oklch(0.25 0.06 164 / 0.38);
 }
 
 @layer base {

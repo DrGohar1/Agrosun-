@@ -15,9 +15,9 @@ export const Route = createFileRoute("/")({
 });
 
 const heroCards = [
-  { id: "artichokes", label: { en: "Fresh vegetables", ar: "خضروات طازجة" }, edge: "border-accent", tint: "from-accent/90 via-accent/60" },
-  { id: "grapes", label: { en: "Fresh grapes", ar: "عنب طازج" }, edge: "border-leaf", tint: "from-primary/95 via-primary/60" },
-  { id: "iqf-strawberries", label: { en: "Frozen IQF produce", ar: "منتجات مجمدة IQF" }, edge: "border-gold", tint: "from-primary-deep/95 via-primary-deep/60" },
+  { id: "artichokes", label: { en: "Fresh vegetables", ar: "خضروات طازجة", it: "Verdure fresche", fr: "Légumes frais", de: "Frisches Gemüse" }, edge: "border-accent", tint: "from-accent/90 via-accent/60" },
+  { id: "grapes", label: { en: "Fresh grapes", ar: "عنب طازج", it: "Uva fresca", fr: "Raisins frais", de: "Frische Trauben" }, edge: "border-leaf", tint: "from-primary/95 via-primary/60" },
+  { id: "iqf-strawberries", label: { en: "Frozen IQF produce", ar: "منتجات مجمدة IQF", it: "Surgelati IQF", fr: "Produits surgelés IQF", de: "IQF-Tiefkühlprodukte" }, edge: "border-gold", tint: "from-primary-deep/95 via-primary-deep/60" },
 ];
 
 const icons = [Sprout, Truck, PackageCheck, Snowflake, Globe2];
@@ -25,14 +25,15 @@ const icons = [Sprout, Truck, PackageCheck, Snowflake, Globe2];
 function Home() {
   const { t, tr, lang } = useLang();
   const { settings: hs, products } = useLive();
-  const heroTitle = hs && (lang === "ar" ? hs.hero_title_ar : lang === "en" ? hs.hero_title_en : "");
-  const heroSub = hs && (lang === "ar" ? hs.hero_subtitle_ar : lang === "en" ? hs.hero_subtitle_en : "");
+  const localized = (base: string) => hs ? String((hs as unknown as Record<string, unknown>)[`${base}_${lang}`] || (hs as unknown as Record<string, unknown>)[`${base}_en`] || "") : "";
+  const heroTitle = localized("hero_title");
+  const heroSub = localized("hero_subtitle");
   const custom = Array.isArray(hs?.stats) ? (hs!.stats as { value: string; label_en: string; label_ar: string }[]).filter((x) => x?.value) : [];
   const stats = custom.length ? custom.map((x) => ({ value: x.value, label: { en: x.label_en, ar: x.label_ar || x.label_en } })) : baseStats;
   const featured = products.filter((p) => p.featured).concat(products.filter((p) => ["artichokes", "iqf-broccoli"].includes(p.id)));
   return (
     <>
-      <section className="relative flex min-h-[88svh] items-center justify-center overflow-hidden pt-32 pb-40 text-center text-primary-foreground lg:min-h-[92vh]">
+      <section className="relative flex min-h-[82svh] items-center justify-center overflow-hidden pb-32 pt-28 text-center text-primary-foreground lg:min-h-[88vh]">
         <img src={(hs?.hero_media_type !== "video" && hs?.hero_media_url) || banners.home.image} alt="Agrosun farms with centre-pivot irrigation" fetchPriority="high" className="absolute inset-0 h-full w-full object-cover animate-[kenburns_14s_ease-out_forwards]" />
         {hs?.hero_media_type === "video" && hs.hero_media_url && <video src={hs.hero_media_url} poster={banners.home.image} autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 h-full w-full object-cover" />}
         <div className="absolute inset-0 bg-gradient-to-b from-primary-deep/60 via-primary-deep/25 to-primary-deep/80" />
@@ -49,8 +50,8 @@ function Home() {
         </div>
       </section>
 
-      <section className="relative z-10 -mt-28 px-5 sm:-mt-32">
-        <div className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-3 sm:gap-6">
+       <section className="relative z-10 -mt-20 px-4 sm:-mt-24 sm:px-5">
+         <div className="mx-auto grid max-w-6xl gap-3 sm:grid-cols-3 sm:gap-5">
           {heroCards.map((c, i) => {
             const p = products.find((x) => x.id === c.id) ?? products[i]; if (!p) return null;
             return (
