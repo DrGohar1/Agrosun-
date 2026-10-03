@@ -3,7 +3,9 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { Home, Info, Apple, BadgeCheck, Handshake, Mail, Languages, Facebook, Instagram, Linkedin, MapPin, Ship } from "lucide-react";
 import { brand, banners, contact } from "@/data/site";
-import { useLang } from "@/lib/lang";
+import { useLang, languages } from "@/lib/lang";
+import { useLive } from "@/lib/live";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -19,8 +21,7 @@ const nav = [
 
 type Social = { facebook_url: string; instagram_url: string; linkedin_url: string; maps_url: string };
 function useSocial() {
-  const [s, setS] = useState<Social | null>(null);
-  useEffect(() => { void supabase.from("site_settings").select("facebook_url,instagram_url,linkedin_url,maps_url").eq("id", "main").maybeSingle().then(({ data }) => setS(data)); }, []);
+  const s: Social | null = useLive().settings;
   return {
     facebook: s?.facebook_url || contact.social.facebook,
     instagram: s?.instagram_url || contact.social.instagram,
@@ -85,9 +86,16 @@ export function TopBar() {
               <a href={social.linkedin || "#"} target="_blank" rel="noreferrer" aria-label="LinkedIn" className="grid h-8 w-8 place-items-center text-muted-foreground hover:text-accent"><Linkedin className="h-4 w-4" /></a>
               <a href={social.map} target="_blank" rel="noreferrer" aria-label="Map" className="grid h-8 w-8 place-items-center text-muted-foreground hover:text-accent"><MapPin className="h-4 w-4" /></a>
             </div>
-            <Button variant="outline" size="sm" onClick={() => setLang(lang === "en" ? "ar" : "en")} className="rounded-full">
-              <Languages className="h-4 w-4" />{lang === "en" ? "عربي" : "EN"}
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="rounded-full" aria-label="Language">
+                  <span className="text-base leading-none">{languages.find((l) => l.code === lang)?.flag}</span><span className="hidden uppercase sm:inline">{lang}</span><Languages className="h-4 w-4 opacity-60" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-44">
+                {languages.map((l) => <DropdownMenuItem key={l.code} onClick={() => setLang(l.code)} className={`gap-3 ${l.code === lang ? "font-bold text-accent" : ""}`}><span className="text-lg leading-none">{l.flag}</span>{l.label}</DropdownMenuItem>)}
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Link to="/contact" className="hidden rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground shadow-lift transition hover:brightness-110 sm:inline-flex">{t("talk")}</Link>
           </div>
         </div>
@@ -117,27 +125,31 @@ export function BottomNav() {
 
 function DevCredit() {
   const { tr } = useLang();
-  const [dev, setDev] = useState<{ developer_name: string; developer_url: string; developer_avatar_url: string } | null>(null);
-  useEffect(() => { void supabase.from("site_settings").select("developer_name,developer_url,developer_avatar_url").eq("id", "main").maybeSingle().then(({ data }) => setDev(data)); }, []);
+  const dev = useLive().settings;
   if (!dev?.developer_name) return null;
   const inner = <>{dev.developer_avatar_url && <img src={dev.developer_avatar_url} alt="" className="h-6 w-6 rounded-full object-cover ring-1 ring-primary-foreground/30" />}<span>{tr({ en: "Developed by", ar: "تطوير" })} <b className="text-primary-foreground/80">{dev.developer_name}</b></span></>;
   return dev.developer_url ? <a href={dev.developer_url} target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-leaf">{inner}</a> : <span className="flex items-center gap-2">{inner}</span>;
 }
 
 export function Footer() {
-  const { tr, t } = useLang();
+  const { tr, t, lang } = useLang();
+  const st = useLive().settings;
+  const slogan = st && (lang === "ar" ? st.slogan_ar : st.slogan_en);
+  const offices = st?.hq_address ? [{ k: { en: "Headquarters", ar: "المقر الرئيسي", it: "Sede centrale", fr: "Siège", de: "Hauptsitz" }, v: st.hq_address }, { k: { en: "Packhouse — Badr", ar: "محطة التعبئة — بدر", it: "Magazzino — Badr", fr: "Station — Badr", de: "Packhaus — Badr" }, v: st.packhouse_address ?? "" }, { k: { en: "IQF complex — Sadat City", ar: "مجمع IQF — السادات", it: "Impianto IQF — Sadat", fr: "Usine IQF — Sadate", de: "IQF-Werk — Sadat" }, v: st.iqf_address ?? "" }].filter((o) => o.v) : null;
+  const email = st?.email || contact.email;
   return (
     <footer className="bg-primary-deep pb-32 pt-16 text-primary-foreground lg:pb-10">
       <div className="mx-auto grid max-w-7xl gap-10 px-5 md:grid-cols-3">
         <div>
           <div className="inline-block rounded-2xl bg-background p-3"><Logo className="h-16" /></div>
-          <p className="mt-4 text-sm text-primary-foreground/70">{tr({ en: "Your strategic partner for sustainable growth.", ar: "شريككم الاستراتيجي للنمو المستدام." })}</p>
+          <p className="mt-4 text-sm text-primary-foreground/70">{slogan || tr({ en: "Your strategic partner for sustainable growth.", ar: "شريككم الاستراتيجي للنمو المستدام." })}</p>
         </div>
         <div className="space-y-3 text-sm">
-          {contact.offices.map((o) => <div key={o.label.en}><div className="font-bold text-leaf">{tr(o.label)}</div><div className="text-primary-foreground/70">{tr(o.value)}</div></div>)}
+          {offices ? offices.map((o) => <div key={o.k.en}><div className="font-bold text-leaf">{tr(o.k)}</div><div className="text-primary-foreground/70">{o.v}</div></div>) : contact.offices.map((o) => <div key={o.label.en}><div className="font-bold text-leaf">{tr(o.label)}</div><div className="text-primary-foreground/70">{tr(o.value)}</div></div>)}
+          {st?.phone && <a href={`tel:${st.phone}`} className="block font-semibold hover:text-leaf">{st.phone}</a>}
         </div>
         <div className="space-y-3 text-sm">
-          <a href={`mailto:${contact.email}`} className="block font-semibold hover:text-leaf">{contact.email}</a>
+          <a href={`mailto:${email}`} className="block font-semibold hover:text-leaf">{email}</a>
           <div className="text-primary-foreground/70">{contact.website}</div>
           <div className="flex flex-wrap gap-3 pt-2">{nav.map((n) => <Link key={n.to} to={n.to} className="text-primary-foreground/70 hover:text-leaf">{t(n.key)}</Link>)}</div>
         </div>
@@ -149,7 +161,7 @@ export function Footer() {
 
 export function PageBanner({ image, kicker, title, children, page }: { image: string; kicker: string; title: string; children?: ReactNode; page?: string }) {
   const { lang } = useLang(); const b = useBanner(page ?? "");
-  if (b) { image = b.image_url || image; title = (lang === "ar" ? b.title_ar : b.title_en) || title; kicker = (lang === "ar" ? b.subtitle_ar : b.subtitle_en) || kicker; }
+  if (b) { image = b.image_url || image; title = (lang === "ar" ? b.title_ar : lang === "en" ? b.title_en : "") || title; kicker = (lang === "ar" ? b.subtitle_ar : lang === "en" ? b.subtitle_en : "") || kicker; }
   return (
     <section className="relative flex min-h-[52vh] items-end overflow-hidden pb-14 pt-32 text-primary-foreground">
       <img src={image} alt="" className="absolute inset-0 h-full w-full object-cover animate-[kenburns_12s_ease-out_forwards]" />

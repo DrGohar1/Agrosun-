@@ -1,40 +1,83 @@
+<div align="center">
+
+<img src="public/images/agrosun-logo.png" alt="Agrosun Group" width="180" />
+
 # Agrosun Group — B2B Export Portal
 
-Bilingual (English / Arabic, full RTL) corporate website and content management dashboard for **Agrosun Group**, an Egyptian exporter of fresh, IQF frozen and processed fruit & vegetables since 1995.
+**From Egyptian soil to the world's tables · since 1995**
 
-![stack](https://img.shields.io/badge/React-19-149eca) ![stack](https://img.shields.io/badge/TanStack_Start-v1-ff4154) ![stack](https://img.shields.io/badge/Supabase-Postgres_+_Auth-3ecf8e) ![stack](https://img.shields.io/badge/Tailwind-v4-38bdf8) ![stack](https://img.shields.io/badge/TypeScript-strict-3178c6)
+Corporate website and content-management dashboard for Agrosun Group, an Egyptian grower, packer, IQF processor and exporter of fresh and frozen produce to the EU, UK and USA.
+
+![Version](https://img.shields.io/badge/version-v1.0.0-0F3E2E?style=for-the-badge)
+![React](https://img.shields.io/badge/React-19-149ECA?style=for-the-badge&logo=react&logoColor=white)
+![TanStack](https://img.shields.io/badge/TanStack_Start-v1-FF4154?style=for-the-badge)
+![Supabase](https://img.shields.io/badge/Supabase-Postgres-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![Tailwind](https://img.shields.io/badge/Tailwind-v4-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Vercel](https://img.shields.io/badge/Deploy-Vercel-000?style=for-the-badge&logo=vercel)
+
+**Live:** https://agrosungog.vercel.app · **Admin:** https://agrosungog.vercel.app/admin
+
+</div>
+
+---
+
+## Screenshots
+
+| Home | Products |
+|---|---|
+| ![Home](docs/screenshots/home-desktop.jpg) | ![Products](docs/screenshots/products-desktop.jpg) |
+
+| About & facilities | Certifications |
+|---|---|
+| ![About](docs/screenshots/about-desktop.jpg) | ![Certifications](docs/screenshots/certifications-desktop.jpg) |
+
+| Export & logistics | Contact |
+|---|---|
+| ![Export](docs/screenshots/export-desktop.jpg) | ![Contact](docs/screenshots/contact-desktop.jpg) |
+
+| Mobile home | Mobile products | Admin sign-in |
+|---|---|---|
+| <img src="docs/screenshots/home-mobile.jpg" width="240"/> | <img src="docs/screenshots/products-mobile.jpg" width="240"/> | <img src="docs/screenshots/admin-login-desktop.jpg" width="320"/> |
 
 ---
 
 ## Features
 
-**Public website**
-- Animated brand loader, hero with image or video background, bottom mobile navigation
-- Product gallery (Fresh / IQF / Processed) with lightbox and per-product enquiry form
-- About, Certifications, Partners & Markets, Contact pages
-- EN / AR language switch with right-to-left layout
-- Social media and Google Maps shortcuts in the top bar
-- SEO metadata per page
+### Public website
+- **Full-viewport hero** with image or video background, editable headline and CTAs.
+- **Product gallery** — fresh, IQF frozen and processed categories, filters, lightbox and per-product enquiry form.
+- **About** — company story, farm-to-table chain, and clickable **facility cards** (Badr Center packhouse, Sadat City IQF complex) opening photo galleries.
+- **Certifications** — GLOBALG.A.P., BRC, ISO 22000, ISO 9001, HACCP, ISO 45001, SMETA.
+- **Partners, Export routes & packing, Contact** with Supabase-backed enquiry form.
+- **Team & governance** showcase with animated cards.
+- **Multi-language:** English (default), Arabic (full RTL), Italian, German, French — flag menu.
+- Responsive from iPhone to wide desktop; social, map and language controls in the top bar.
 
-**Admin dashboard (`/admin`)**
-- Secure email/password sign-in; the first account created becomes the administrator
-- Products: add, edit, hide, feature, reorder, change photos
-- Manual English & Arabic product descriptions
-- Enquiries inbox with status pipeline (new → contacted → qualified → closed)
-- Team / management cards (name, title, photo, phone, WhatsApp)
-- Site settings: company identity, logo, hero banner (image or video), contact channels, social links, developer credit
+### Admin dashboard (`/admin`)
+| Panel | What it controls |
+|---|---|
+| Overview | KPIs, latest enquiries |
+| Products | Add / edit / hide products, photos, specs, packaging, sort order |
+| Enquiries | Every RFQ and contact message, status tracking |
+| Content | Certifications, partners (with logos), facilities & galleries, page banners |
+| Team | Board, directors, QA leads — photo, title, phone, LinkedIn |
+| Analytics | Date filters, charts, CSV export, print-to-PDF report |
+| Users | Role-based access: admin, editor, viewer |
+| Settings | Logo, hero text/video, contact details, addresses, social links, developer credit |
+
+Every save is **live**: the public site updates instantly through Supabase Realtime — no redeploy needed.
 
 ---
 
 ## Tech stack
 
 | Layer | Technology |
-| --- | --- |
-| Framework | React 19 + TanStack Start v1 (SSR, server functions) |
+|---|---|
+| Framework | TanStack Start v1 (React 19, SSR, server functions) |
 | Build | Vite 7 |
-| Styling | Tailwind CSS v4, shadcn/ui, design tokens in `src/styles.css` |
-| Database & Auth | Supabase (Postgres, Row-Level Security, Auth) |
-| Validation | Zod |
+| Styling | Tailwind CSS v4, shadcn/ui, Fraunces + Plus Jakarta Sans |
+| Database / Auth / Storage | Supabase (Postgres + RLS, Auth, Storage bucket `site-media`, Realtime) |
+| Hosting | Vercel (or any Node / edge host) |
 
 ---
 
@@ -42,93 +85,74 @@ Bilingual (English / Arabic, full RTL) corporate website and content management 
 
 ```text
 src/
-  routes/            one file per page (index, about, products, certifications, partners, contact, admin)
-  components/site/   shared layout: loader, header, bottom nav, footer, product enquiry dialog
-  components/ui/     shadcn/ui primitives
+  routes/            one file per page (index, about, products, export, certifications, partners, contact, admin)
+  components/site/   public layout: Shell (nav, footer), TeamSection, ProductInquiry
+  components/admin/  dashboard panels: Content, Users, Analytics, MediaUpload
+  lib/live.tsx       live data layer (cache + Supabase Realtime)
+  lib/lang.tsx       language & RTL engine
   data/site.ts       bilingual fallback content
-  lib/lang.tsx       language + RTL state
-  lib/*.functions.ts server functions (admin bootstrap)
-  integrations/supabase/  database clients, auth middleware, generated types
-supabase/migrations/ database schema & security policies
+  integrations/supabase/  generated client & types
+public/images/       all company photos (bundled, no external links)
+docs/                documentation & screenshots
 ```
 
 ---
 
-## Database
+## Getting started
 
-| Table | Purpose | Access |
-| --- | --- | --- |
-| `products` | catalogue | public reads visible rows, admin writes |
-| `contact_messages` | enquiries from contact & product forms | anyone can submit, admin reads |
-| `team_members` | management cards | public reads visible, admin writes |
-| `site_settings` | company, hero, social, developer credit | public reads, admin writes |
-| `certifications`, `partners`, `site_banners` | content | public reads visible, admin writes |
-| `profiles` | user profile | owner / admin |
-| `user_roles` | roles (`admin`, `editor`) | read own; granted server-side only |
+```bash
+git clone https://github.com/DrGohar1/Agrosun-.git
+cd Agrosun-
+npm install          # or: bun install
+cp .env.example .env # then fill in your Supabase values
+npm run dev          # http://localhost:8080
+```
 
-Roles are stored in a dedicated table and checked through the `has_role()` security-definer function.
+### Environment variables
+
+| Variable | Where | Description |
+|---|---|---|
+| `VITE_SUPABASE_URL` | client + server | `https://<project-ref>.supabase.co` |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | client + server | Supabase anon / publishable key |
+| `VITE_SUPABASE_PROJECT_ID` | client | Supabase project ref |
+| `SUPABASE_URL` | server | same as above |
+| `SUPABASE_PUBLISHABLE_KEY` | server | same anon key |
+| `SUPABASE_SERVICE_ROLE_KEY` | server only | used for user management — **never expose** |
 
 ---
 
-## Environment variables
+## Database (Supabase)
 
-Create a `.env` file in the project root (never commit it):
+Tables: `products`, `certifications`, `partners`, `facilities`, `site_banners`, `site_settings`, `team_members`, `contact_messages`, `profiles`, `user_roles`.
 
-```bash
-# Browser-safe
-VITE_SUPABASE_URL=https://<project-ref>.supabase.co
-VITE_SUPABASE_PUBLISHABLE_KEY=<anon / publishable key>
-VITE_SUPABASE_PROJECT_ID=<project-ref>
-
-# Server-only
-SUPABASE_URL=https://<project-ref>.supabase.co
-SUPABASE_PUBLISHABLE_KEY=<anon / publishable key>
-SUPABASE_SERVICE_ROLE_KEY=<service role key>   # never expose to the browser
-```
+- Row-Level Security on every table: public reads only visible rows; writes require `admin`/`editor` role via `has_role()`.
+- Visitors can only **insert** enquiries; they can never read them.
+- Roles live in a separate `user_roles` table (no privilege escalation).
+- New project? Run the full schema from `docs/` (or the `supabase/migrations` folder) in the Supabase SQL editor.
 
 ---
-
-## Local development
-
-```bash
-bun install        # or npm install
-bun run dev        # http://localhost:8080
-bun run build      # production build
-```
-
-## Supabase setup (own project)
-
-1. Create a project at supabase.com → copy URL, anon key and service role key into `.env`.
-2. Install the CLI and apply the schema:
-   ```bash
-   npx supabase link --project-ref <project-ref>
-   npx supabase db push
-   ```
-3. Authentication → Providers → enable Email.
-4. Open `/admin`, create your account — the first account is promoted to admin automatically.
-
-## GitHub
-
-```bash
-git init && git add . && git commit -m "Agrosun portal"
-git branch -M main
-git remote add origin https://github.com/<user>/agrosun-portal.git
-git push -u origin main
-```
 
 ## Deploy to Vercel
 
-1. vercel.com → **Add New Project** → import the GitHub repository.
-2. Framework preset: **Other** · Build command `bun run build` (or `npm run build`).
-3. Add every variable from the *Environment variables* section under **Settings → Environment Variables**.
-4. Deploy, then add your domain under **Settings → Domains**.
+1. Import `DrGohar1/Agrosun-` at **vercel.com → Add New → Project**.
+2. Framework preset: **Other / Vite**. Build: `npm run build`.
+3. Add the environment variables above.
+4. Deploy. Every push to `main` redeploys automatically.
+5. Add your custom domain in **Settings → Domains**.
+
+See [`docs/DOCUMENTATION.md`](docs/DOCUMENTATION.md) for the full admin guide and operations handbook.
 
 ---
 
-## Security notes
-- Row-Level Security is enabled on every table.
-- The service role key is used only inside server functions.
-- Admin status is verified server-side; never trust client storage.
+## Release
 
-## License
-Proprietary — © Agrosun Group. All rights reserved.
+**v1.0.0** — first production release: public site, live CMS, RBAC, analytics, multi-language, facilities galleries.
+
+---
+
+<div align="center">
+
+© Agrosun Group. All rights reserved.
+Designed & developed by **Ahmed Gohar**.
+
+</div>

@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_logs: {
+        Row: {
+          action: string
+          actor_email: string
+          actor_id: string | null
+          created_at: string
+          id: string
+          target: string
+        }
+        Insert: {
+          action: string
+          actor_email?: string
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          target?: string
+        }
+        Update: {
+          action?: string
+          actor_email?: string
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          target?: string
+        }
+        Relationships: []
+      }
       certifications: {
         Row: {
           created_at: string
@@ -190,9 +217,11 @@ export type Database = {
           image_alt_ar: string
           image_alt_en: string
           image_url: string | null
+          in_season: boolean
           name_ar: string
           name_en: string
           packaging: string | null
+          season_months: Json
           slug: string
           sort_order: number
           specs: Json
@@ -209,9 +238,11 @@ export type Database = {
           image_alt_ar?: string
           image_alt_en?: string
           image_url?: string | null
+          in_season?: boolean
           name_ar?: string
           name_en: string
           packaging?: string | null
+          season_months?: Json
           slug: string
           sort_order?: number
           specs?: Json
@@ -228,9 +259,11 @@ export type Database = {
           image_alt_ar?: string
           image_alt_en?: string
           image_url?: string | null
+          in_season?: boolean
           name_ar?: string
           name_en?: string
           packaging?: string | null
+          season_months?: Json
           slug?: string
           sort_order?: number
           specs?: Json
@@ -246,6 +279,7 @@ export type Database = {
           display_name: string
           phone: string
           preferences: Json
+          status: string
           updated_at: string
           user_id: string
         }
@@ -255,6 +289,7 @@ export type Database = {
           display_name?: string
           phone?: string
           preferences?: Json
+          status?: string
           updated_at?: string
           user_id: string
         }
@@ -264,6 +299,7 @@ export type Database = {
           display_name?: string
           phone?: string
           preferences?: Json
+          status?: string
           updated_at?: string
           user_id?: string
         }
@@ -326,15 +362,21 @@ export type Database = {
           hero_subtitle_en: string
           hero_title_ar: string
           hero_title_en: string
+          hq_address: string
           id: string
           instagram_url: string
+          iqf_address: string
           legal_name: string
           linkedin_url: string
           logo_url: string
           maps_url: string
+          packhouse_address: string
           phone: string
           published: boolean
           section_visibility: Json
+          slogan_ar: string
+          slogan_en: string
+          stats: Json
           updated_at: string
           whatsapp: string
           youtube_url: string
@@ -353,15 +395,21 @@ export type Database = {
           hero_subtitle_en?: string
           hero_title_ar?: string
           hero_title_en?: string
+          hq_address?: string
           id?: string
           instagram_url?: string
+          iqf_address?: string
           legal_name?: string
           linkedin_url?: string
           logo_url?: string
           maps_url?: string
+          packhouse_address?: string
           phone?: string
           published?: boolean
           section_visibility?: Json
+          slogan_ar?: string
+          slogan_en?: string
+          stats?: Json
           updated_at?: string
           whatsapp?: string
           youtube_url?: string
@@ -380,15 +428,21 @@ export type Database = {
           hero_subtitle_en?: string
           hero_title_ar?: string
           hero_title_en?: string
+          hq_address?: string
           id?: string
           instagram_url?: string
+          iqf_address?: string
           legal_name?: string
           linkedin_url?: string
           logo_url?: string
           maps_url?: string
+          packhouse_address?: string
           phone?: string
           published?: boolean
           section_visibility?: Json
+          slogan_ar?: string
+          slogan_en?: string
+          stats?: Json
           updated_at?: string
           whatsapp?: string
           youtube_url?: string
@@ -400,7 +454,9 @@ export type Database = {
           badges: Json
           created_at: string
           email: string
+          group_name: string
           id: string
+          linkedin_url: string
           name_ar: string
           name_en: string
           phone: string
@@ -416,7 +472,9 @@ export type Database = {
           badges?: Json
           created_at?: string
           email?: string
+          group_name?: string
           id?: string
+          linkedin_url?: string
           name_ar?: string
           name_en: string
           phone?: string
@@ -432,7 +490,9 @@ export type Database = {
           badges?: Json
           created_at?: string
           email?: string
+          group_name?: string
           id?: string
+          linkedin_url?: string
           name_ar?: string
           name_en?: string
           phone?: string
@@ -470,6 +530,10 @@ export type Database = {
     }
     Functions: {
       bootstrap_admin: { Args: { _user_id: string }; Returns: boolean }
+      has_any_role: {
+        Args: { _roles: string[]; _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -479,7 +543,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "editor"
+      app_role: "admin" | "editor" | "viewer"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -607,7 +671,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "editor"],
+      app_role: ["admin", "editor", "viewer"],
     },
   },
 } as const

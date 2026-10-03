@@ -21,7 +21,7 @@ const carrots = { url: "/images/carrots.jpg" };
 const peppers = { url: "/images/bell-peppers.jpg" };
 const watermelon = { url: "/images/watermelon.jpg" };
 
-export type L = { en: string; ar: string };
+export type L = { en: string; ar: string; it?: string; fr?: string; de?: string };
 
 export const brand = {
   name: "AGRO SUN",

@@ -14,6 +14,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { LangProvider } from "@/lib/lang";
+import { LiveProvider } from "@/lib/live";
 import { Loader, TopBar, BottomNav, Footer } from "@/components/site/Shell";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -129,14 +130,14 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <LangProvider>
+      <LangProvider><LiveProvider>
         {!isAdmin && <Loader />}
         {!isAdmin && <TopBar />}
         <main><Outlet /></main>
         {!isAdmin && <Footer />}
         {!isAdmin && <BottomNav />}
         <Toaster position="top-center" />
-      </LangProvider>
+      </LiveProvider></LangProvider>
     </QueryClientProvider>
   );
 }

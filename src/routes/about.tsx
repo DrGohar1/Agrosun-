@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useLang } from "@/lib/lang";
+import { useLive } from "@/lib/live";
 import { PageBanner, Section, Reveal } from "@/components/site/Shell";
 
 const title = "About Agrosun Group — Three Decades of Egyptian Agro-Export";
@@ -20,7 +21,8 @@ function About() {
   const { tr } = useLang();
   const [facs, setFacs] = useState<Fac[]>(facilities.map((f) => ({ ...f, gallery: [f.image] })));
   const [open, setOpen] = useState<Fac | null>(null);
-  useEffect(() => { void (supabase as any).from("facilities").select("*").eq("visible", true).order("sort_order").then(({ data }: { data: any[] | null }) => { if (data?.length) setFacs(data.map((d) => ({ name: { en: d.name_en, ar: d.name_ar || d.name_en }, place: { en: d.place_en, ar: d.place_ar || d.place_en }, image: d.cover_url || d.gallery?.[0] || "", points: { en: d.points_en.split("\n").filter(Boolean), ar: (d.points_ar || d.points_en).split("\n").filter(Boolean) }, gallery: (d.gallery ?? []).filter(Boolean) }))); }); }, []);
+  const { version } = useLive();
+  useEffect(() => { void (supabase as any).from("facilities").select("*").eq("visible", true).order("sort_order").then(({ data }: { data: any[] | null }) => { if (data?.length) setFacs(data.map((d) => ({ name: { en: d.name_en, ar: d.name_ar || d.name_en }, place: { en: d.place_en, ar: d.place_ar || d.place_en }, image: d.cover_url || d.gallery?.[0] || "", points: { en: d.points_en.split("\n").filter(Boolean), ar: (d.points_ar || d.points_en).split("\n").filter(Boolean) }, gallery: (d.gallery ?? []).filter(Boolean) }))); }); }, [version]);
   return (
     <>
       <PageBanner page="about" image={banners.about.image} kicker={tr({ en: "About the group", ar: "نبذة عن المجموعة" })} title={tr({ en: "Experience spanning three decades", ar: "خبرة تمتد لثلاثة عقود" })} />

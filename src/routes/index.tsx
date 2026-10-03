@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Snowflake, Sprout, Truck, PackageCheck, Globe2 } from "lucide-react";
-import { banners, brand, hero, stats, products, certifications, markets, about } from "@/data/site";
+import { banners, brand, hero, stats as baseStats, certifications, markets, about } from "@/data/site";
+import { useLive } from "@/lib/live";
+import { TeamSection } from "@/components/site/TeamSection";
 import { useLang } from "@/lib/lang";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { Section, Reveal } from "@/components/site/Shell";
 
 const title = "Agro Sun — Agrosun Group | Egyptian Fresh & IQF Produce Exporter since 1995";
@@ -24,10 +24,11 @@ const icons = [Sprout, Truck, PackageCheck, Snowflake, Globe2];
 
 function Home() {
   const { t, tr, lang } = useLang();
-  const [hs, setHs] = useState<{ hero_media_url: string; hero_media_type: string; hero_title_en: string; hero_title_ar: string; hero_subtitle_en: string; hero_subtitle_ar: string } | null>(null);
-  useEffect(() => { void supabase.from("site_settings").select("hero_media_url,hero_media_type,hero_title_en,hero_title_ar,hero_subtitle_en,hero_subtitle_ar").eq("id", "main").maybeSingle().then(({ data }) => setHs(data)); }, []);
-  const heroTitle = hs && (lang === "ar" ? hs.hero_title_ar : hs.hero_title_en);
-  const heroSub = hs && (lang === "ar" ? hs.hero_subtitle_ar : hs.hero_subtitle_en);
+  const { settings: hs, products } = useLive();
+  const heroTitle = hs && (lang === "ar" ? hs.hero_title_ar : lang === "en" ? hs.hero_title_en : "");
+  const heroSub = hs && (lang === "ar" ? hs.hero_subtitle_ar : lang === "en" ? hs.hero_subtitle_en : "");
+  const custom = Array.isArray(hs?.stats) ? (hs!.stats as { value: string; label_en: string; label_ar: string }[]).filter((x) => x?.value) : [];
+  const stats = custom.length ? custom.map((x) => ({ value: x.value, label: { en: x.label_en, ar: x.label_ar || x.label_en } })) : baseStats;
   const featured = products.filter((p) => p.featured).concat(products.filter((p) => ["artichokes", "iqf-broccoli"].includes(p.id)));
   return (
     <>
@@ -80,7 +81,7 @@ function Home() {
 
       <Section kicker={tr({ en: "Our products", ar: "منتجاتنا" })} title={tr({ en: "Fresh, frozen & processed", ar: "طازج، مجمد ومصنّع" })}>
         <div className="grid gap-5 md:grid-cols-3">
-          {([{ c: "fresh" as const, img: products[0]!.image, label: { en: "Fresh Produce", ar: "الحاصلات الطازجة" } }, { c: "iqf" as const, img: products.find((p) => p.id === "iqf-strawberries")!.image, label: { en: "IQF Frozen", ar: "التجميد السريع" } }, { c: "processed" as const, img: products.find((p) => p.id === "pickled-peppers")!.image, label: { en: "Processed", ar: "منتجات مصنّعة" } }]).map((x, i) => (
+          {([{ c: "fresh" as const, img: products[0]?.image ?? "", label: { en: "Fresh Produce", ar: "الحاصلات الطازجة" } }, { c: "iqf" as const, img: (products.find((p) => p.id === "iqf-strawberries") ?? products[0])?.image ?? "", label: { en: "IQF Frozen", ar: "التجميد السريع" } }, { c: "processed" as const, img: (products.find((p) => p.id === "pickled-peppers") ?? products[0])?.image ?? "", label: { en: "Processed", ar: "منتجات مصنّعة" } }]).map((x, i) => (
             <Reveal key={x.c} delay={i * 120}>
               <Link to="/products" search={{ c: x.c }} className="group relative block h-80 overflow-hidden rounded-3xl shadow-lift">
                 <img src={x.img} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110" />
@@ -123,6 +124,7 @@ function Home() {
         </div>
         <blockquote className="mt-12 rounded-3xl bg-primary p-8 font-display text-2xl leading-snug text-primary-foreground sm:p-12 sm:text-3xl">“{tr(about.quote)}”</blockquote>
       </Section>
+      <TeamSection />
     </>
   );
 }
