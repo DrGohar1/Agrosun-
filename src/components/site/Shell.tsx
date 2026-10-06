@@ -70,12 +70,12 @@ export function TopBar() {
   return (
     <header className={`fixed inset-x-0 top-0 z-50 transition-all ${scrolled ? "py-2" : "py-4"}`}>
       <div className="mx-auto max-w-7xl px-3 sm:px-4">
-        <div className="grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-lg border border-border/60 bg-background/95 px-3 py-2 shadow-lift backdrop-blur sm:px-4 lg:flex lg:justify-between">
+        <div className="grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-lg border border-border/60 bg-topbar text-topbar-foreground px-3 py-2 shadow-lift backdrop-blur sm:px-4 lg:flex lg:justify-between">
           <Link to="/"><Logo className="h-10 sm:h-12" /></Link>
           <nav className="hidden items-center gap-1 lg:flex">
             {nav.map((n) => (
               <Link key={n.to} to={n.to} activeOptions={{ exact: true }} activeProps={{ className: "text-accent after:scale-x-100" }}
-                className="relative px-3 py-2 text-sm font-semibold text-foreground/80 transition hover:text-accent after:absolute after:inset-x-3 after:bottom-1 after:h-0.5 after:scale-x-0 after:bg-accent after:transition-transform">
+                className="relative px-3 py-2 text-sm font-semibold text-topbar-foreground transition hover:text-accent after:absolute after:inset-x-3 after:bottom-1 after:h-0.5 after:scale-x-0 after:bg-accent after:transition-transform">
                 {t(n.key)}
               </Link>
             ))}
@@ -106,25 +106,6 @@ export function TopBar() {
   );
 }
 
-export function BottomNav() {
-  const { t } = useLang();
-  return (
-    <nav className="fixed inset-x-0 bottom-0 z-50 px-3 lg:hidden pb-[max(env(safe-area-inset-bottom),0.75rem)] lg:pb-4">
-       <div className="mx-auto grid max-w-xl grid-cols-7 items-stretch gap-0.5 rounded-2xl border border-primary-foreground/10 bg-primary-deep/95 p-1.5 shadow-lift backdrop-blur">
-        {nav.map(({ to, key, icon: Icon }) => (
-          <Link key={to} to={to} activeOptions={{ exact: true }}
-            activeProps={{ className: "bg-accent text-accent-foreground" }}
-            inactiveProps={{ className: "text-primary-foreground/70 hover:text-primary-foreground" }}
-             className="flex min-w-0 flex-col items-center gap-0.5 overflow-hidden rounded-xl px-0.5 py-2 text-[8px] font-semibold transition sm:text-xs">
-            <Icon className="h-5 w-5" />
-             <span className="w-full truncate text-center">{t(key)}</span>
-          </Link>
-        ))}
-      </div>
-    </nav>
-  );
-}
-
 function DevCredit() {
   const { tr } = useLang();
   const dev = useLive().settings;
@@ -141,7 +122,7 @@ export function Footer() {
   const offices = st?.hq_address ? [{ k: { en: "Headquarters", ar: "المقر الرئيسي", it: "Sede centrale", fr: "Siège", de: "Hauptsitz" }, v: lang === "ar" ? st.hq_address : local("hq_address") || st.hq_address }, { k: { en: "Packhouse — Badr", ar: "محطة التعبئة — بدر", it: "Magazzino — Badr", fr: "Station — Badr", de: "Packhaus — Badr" }, v: lang === "ar" ? st.packhouse_address : local("packhouse_address") || st.packhouse_address }, { k: { en: "IQF complex — Sadat City", ar: "مجمع IQF — السادات", it: "Impianto IQF — Sadat", fr: "Usine IQF — Sadate", de: "IQF-Werk — Sadat" }, v: lang === "ar" ? st.iqf_address : local("iqf_address") || st.iqf_address }].filter((o) => o.v) : null;
   const email = st?.email || contact.email;
   return (
-    <footer className="bg-primary-deep pb-32 pt-16 text-primary-foreground lg:pb-10">
+    <footer className="bg-footer pb-28 pt-16 lg:pb-10 text-primary-foreground">
       <div className="mx-auto grid max-w-7xl gap-10 px-5 md:grid-cols-3">
         <div>
           <div className="inline-block rounded-2xl bg-background p-3"><Logo className="h-16" /></div>
@@ -154,7 +135,8 @@ export function Footer() {
         <div className="space-y-3 text-sm">
           <a href={`mailto:${email}`} className="block font-semibold hover:text-leaf">{email}</a>
           <div className="text-primary-foreground/70">{contact.website}</div>
-          <div className="flex flex-wrap gap-3 pt-2">{nav.map((n) => <Link key={n.to} to={n.to} className="text-primary-foreground/70 hover:text-leaf">{t(n.key)}</Link>)}</div>
+          <div className="flex items-center gap-1 pt-1"><a href={st?.facebook_url || contact.social.facebook || "#"} target="_blank" rel="noreferrer" aria-label="Facebook" className="grid h-9 w-9 place-items-center rounded-md border border-primary-foreground/15 hover:text-leaf"><Facebook className="h-4 w-4" /></a><a href={st?.instagram_url || contact.social.instagram || "#"} target="_blank" rel="noreferrer" aria-label="Instagram" className="grid h-9 w-9 place-items-center rounded-md border border-primary-foreground/15 hover:text-leaf"><Instagram className="h-4 w-4" /></a><a href={st?.linkedin_url || contact.social.linkedin || "#"} target="_blank" rel="noreferrer" aria-label="LinkedIn" className="grid h-9 w-9 place-items-center rounded-md border border-primary-foreground/15 hover:text-leaf"><Linkedin className="h-4 w-4" /></a><a href={st?.maps_url || contact.map} target="_blank" rel="noreferrer" aria-label="Map" className="grid h-9 w-9 place-items-center rounded-md border border-primary-foreground/15 hover:text-leaf"><MapPin className="h-4 w-4" /></a></div>
+          <nav className="grid grid-cols-2 gap-x-4 gap-y-2 pt-2">{nav.map((n) => <Link key={n.to} to={n.to} className="text-primary-foreground/70 hover:text-leaf">{t(n.key)}</Link>)}</nav>
         </div>
       </div>
       <div className="mx-auto mt-10 flex max-w-7xl flex-wrap items-center justify-between gap-3 border-t border-primary-foreground/10 px-5 pt-6 text-xs text-primary-foreground/50"><span>© {new Date().getFullYear()} {brand.legal}. {tr({ en: "All rights reserved.", ar: "جميع الحقوق محفوظة." })}</span><DevCredit /></div>
@@ -181,7 +163,7 @@ export function PageBanner({ image, kicker, title, children, page }: { image: st
 
 export function Section({ kicker, title, children, className = "" }: { kicker?: string; title?: string; children: ReactNode; className?: string }) {
   return (
-    <section className={`py-16 lg:py-24 ${className}`}>
+    <section className={`depth-section py-16 lg:py-24 ${className}`}>
       <div className="mx-auto max-w-7xl px-5">
         {(kicker || title) && (
           <div className="mb-10 flex items-end gap-4">
@@ -207,5 +189,45 @@ export function Reveal({ children, delay = 0, className = "" }: { children: Reac
     const io = new IntersectionObserver(([e]) => { if (e?.isIntersecting) { setOn(true); io.disconnect(); } }, { threshold: 0.15 });
     io.observe(el); return () => io.disconnect();
   }, [el]);
-  return <div ref={setEl} style={{ transitionDelay: `${delay}ms` }} className={`transition-all duration-700 ${on ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"} ${className}`}>{children}</div>;
+  return <div ref={setEl} style={{ transitionDelay: `${delay}ms` }} className={`transition-all duration-700 [transform-style:preserve-3d] ${on ? "translate-y-0 scale-100 opacity-100" : "translate-y-8 scale-[0.985] opacity-0"} ${className}`}>{children}</div>;
+}
+
+const mobileNav = [
+  { to: "/", key: "home", icon: Home },
+  { to: "/products", key: "products", icon: Apple },
+  { to: "/about", key: "about", icon: Info },
+  { to: "/contact", key: "contact", icon: Mail },
+] as const;
+
+/** Fixed mobile navigation: the four core sections only (partners, certificates and export live on the homepage). */
+export function BottomNav() {
+  const { t } = useLang();
+  return (
+    <nav aria-label="Main" className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-50 lg:hidden">
+      <div className="mx-auto grid max-w-md grid-cols-4 rounded-2xl border border-border/60 bg-bottombar p-1.5 shadow-lift backdrop-blur-xl">
+        {mobileNav.map(({ to, key, icon: Icon }) => (
+          <Link key={to} to={to} activeOptions={{ exact: true }} activeProps={{ className: "bg-primary text-primary-foreground" }} inactiveProps={{ className: "text-bottombar-foreground" }}
+            className="flex flex-col items-center gap-0.5 rounded-xl py-2 text-[11px] font-semibold transition active:scale-95">
+            <Icon className="h-5 w-5" /><span className="truncate">{t(key)}</span>
+          </Link>
+        ))}
+      </div>
+    </nav>
+  );
+}
+
+/** Always-visible chat bubble that opens WhatsApp with the export team. */
+export function FloatingChat() {
+  const { tr } = useLang();
+  const s = useSocial();
+  const phone = (s.whatsapp || "").replace(/\D/g, "");
+  const href = phone ? `https://wa.me/${phone}` : "/contact";
+  return (
+    <a href={href} target={phone ? "_blank" : undefined} rel="noreferrer" aria-label={tr({ en: "Chat with export team", ar: "تحدث مع فريق التصدير", it: "Chatta con il team export", fr: "Discuter avec l'équipe export", de: "Mit dem Exportteam chatten" })}
+      className="group fixed bottom-24 end-4 z-50 flex items-center gap-2 rounded-full bg-leaf p-3.5 text-primary-deep shadow-lift transition hover:scale-105 active:scale-95 lg:bottom-6">
+      <span className="absolute inset-0 animate-ping rounded-full bg-leaf/40" />
+      <MessageCircle className="relative h-6 w-6" />
+      <span className="relative hidden pe-1 text-sm font-bold lg:inline">{tr({ en: "Chat with us", ar: "تواصل معنا", it: "Scrivici", fr: "Écrivez-nous", de: "Chatten" })}</span>
+    </a>
+  );
 }

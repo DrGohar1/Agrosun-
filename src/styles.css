@@ -19,6 +19,11 @@
  */
 
 @theme inline {
+  --color-topbar: var(--topbar-bg);
+  --color-topbar-foreground: var(--topbar-fg);
+  --color-bottombar: var(--bottombar-bg);
+  --color-bottombar-foreground: var(--bottombar-fg);
+  --color-footer: var(--footer-bg);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -71,6 +76,11 @@
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
+  --topbar-bg: oklch(1 0 0 / 0.95);
+  --topbar-fg: oklch(0.25 0.04 163);
+  --bottombar-bg: oklch(1 0 0 / 0.92);
+  --bottombar-fg: oklch(0.45 0.03 163);
+  --footer-bg: oklch(0.22 0.055 164);
   --foreground: oklch(0.22 0.03 165);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.22 0.03 165);
@@ -106,7 +116,7 @@
   --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
-  --gradient-hero: linear-gradient(180deg, oklch(0.25 0.06 164 / 0.32) 0%, oklch(0.25 0.06 164 / 0.62) 58%, oklch(0.2 0.05 164 / 0.94) 100%);
+  --gradient-hero: linear-gradient(145deg, oklch(0.19 0.055 164 / 0.9) 0%, oklch(0.27 0.075 163 / 0.62) 52%, oklch(0.34 0.13 18 / 0.72) 100%);
   --shadow-lift: 0 18px 42px -22px oklch(0.25 0.06 164 / 0.38);
 }
 
@@ -127,6 +137,11 @@
   [dir="rtl"] .font-display { font-family: "IBM Plex Sans Arabic", sans-serif; font-weight: 700; }
 }
 @utility bg-hero { background-image: var(--gradient-hero); }
+@utility depth-section {
+  position: relative;
+  transform-style: preserve-3d;
+  perspective: 1200px;
+}
 @utility shadow-lift { box-shadow: var(--shadow-lift); }
 @utility tabular { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 @keyframes kenburns { from { transform: scale(1.15); } to { transform: scale(1); } }
@@ -134,3 +149,7 @@
 @keyframes loadbar { from { width: 0; } to { width: 100%; } }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}

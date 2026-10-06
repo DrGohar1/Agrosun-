@@ -258,6 +258,7 @@ export type Database = {
           description_fr: string
           description_it: string
           featured: boolean
+          gallery: Json
           id: string
           image_alt_ar: string
           image_alt_en: string
@@ -276,7 +277,9 @@ export type Database = {
           slug: string
           sort_order: number
           specs: Json
+          tons: number
           updated_at: string
+          views: number
           visible: boolean
         }
         Insert: {
@@ -288,6 +291,7 @@ export type Database = {
           description_fr?: string
           description_it?: string
           featured?: boolean
+          gallery?: Json
           id?: string
           image_alt_ar?: string
           image_alt_en?: string
@@ -306,7 +310,9 @@ export type Database = {
           slug: string
           sort_order?: number
           specs?: Json
+          tons?: number
           updated_at?: string
+          views?: number
           visible?: boolean
         }
         Update: {
@@ -318,6 +324,7 @@ export type Database = {
           description_fr?: string
           description_it?: string
           featured?: boolean
+          gallery?: Json
           id?: string
           image_alt_ar?: string
           image_alt_en?: string
@@ -336,7 +343,9 @@ export type Database = {
           slug?: string
           sort_order?: number
           specs?: Json
+          tons?: number
           updated_at?: string
+          views?: number
           visible?: boolean
         }
         Relationships: []
@@ -446,6 +455,7 @@ export type Database = {
           developer_url: string
           email: string
           facebook_url: string
+          hero_cta: Json
           hero_media_type: string
           hero_media_url: string
           hero_subtitle_ar: string
@@ -485,6 +495,7 @@ export type Database = {
           slogan_fr: string
           slogan_it: string
           stats: Json
+          theme: Json
           updated_at: string
           whatsapp: string
           youtube_url: string
@@ -497,6 +508,7 @@ export type Database = {
           developer_url?: string
           email?: string
           facebook_url?: string
+          hero_cta?: Json
           hero_media_type?: string
           hero_media_url?: string
           hero_subtitle_ar?: string
@@ -536,6 +548,7 @@ export type Database = {
           slogan_fr?: string
           slogan_it?: string
           stats?: Json
+          theme?: Json
           updated_at?: string
           whatsapp?: string
           youtube_url?: string
@@ -548,6 +561,7 @@ export type Database = {
           developer_url?: string
           email?: string
           facebook_url?: string
+          hero_cta?: Json
           hero_media_type?: string
           hero_media_url?: string
           hero_subtitle_ar?: string
@@ -587,6 +601,7 @@ export type Database = {
           slogan_fr?: string
           slogan_it?: string
           stats?: Json
+          theme?: Json
           updated_at?: string
           whatsapp?: string
           youtube_url?: string

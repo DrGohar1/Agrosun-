@@ -13,9 +13,18 @@ const C = createContext<Live | null>(null);
 const CACHE = "agrosun-live-v1";
 const tables = ["site_settings", "products", "team_members", "facilities", "certifications", "partners", "site_banners"] as const;
 
+/** Theme variables the admin can override (Appearance panel). */
+export const themeKeys = ["primary", "accent", "background", "topbar-bg", "topbar-fg", "bottombar-bg", "bottombar-fg", "footer-bg"] as const;
+
 function toProduct(r: DbProduct): Product {
   const base = fallbackProducts.find((p) => p.id === r.slug);
-  const specs = Array.isArray(r.specs) ? (r.specs as unknown[]).map(String).filter(Boolean) : [];
+  const rawSpecs = r.specs as unknown;
+  const specs = Array.isArray(rawSpecs)
+    ? { en: rawSpecs.map(String).filter(Boolean), ar: rawSpecs.map(String).filter(Boolean) }
+    : rawSpecs && typeof rawSpecs === "object"
+      ? Object.fromEntries(Object.entries(rawSpecs).map(([key, value]) => [key, Array.isArray(value) ? value.map(String).filter(Boolean) : []]))
+      : null;
+  const seasonMonths = Array.isArray(r.season_months) ? r.season_months.map(Number).filter((month) => month >= 1 && month <= 12) : [];
   return {
     id: r.slug,
     category: (["fresh", "iqf", "processed"].includes(r.category) ? r.category : "fresh") as Category,
@@ -23,8 +32,13 @@ function toProduct(r: DbProduct): Product {
     image: r.image_url || base?.image || "",
     name: { en: r.name_en, ar: r.name_ar || r.name_en, it: r.name_it, fr: r.name_fr, de: r.name_de },
     text: { en: r.description_en || base?.text.en || "", ar: r.description_ar || base?.text.ar || r.description_en || "", it: r.description_it, fr: r.description_fr, de: r.description_de },
-    ...(specs.length ? { specs: { en: specs, ar: specs, it: specs, fr: specs, de: specs } } : base?.specs ? { specs: base.specs } : {}),
+    ...(specs && Array.isArray(specs['en']) && specs['en'].length ? { specs: specs as NonNullable<Product["specs"]> } : base?.specs ? { specs: base.specs } : {}),
     ...(r.packaging ? { packaging: { en: r.packaging, ar: r.packaging, it: r.packaging_it, fr: r.packaging_fr, de: r.packaging_de } } : base?.packaging ? { packaging: base.packaging } : {}),
+    inSeason: r.in_season,
+    seasonMonths,
+    views: Number((r as unknown as Record<string, unknown>)['views'] ?? 0),
+    tons: Number((r as unknown as Record<string, unknown>)['tons'] ?? 0),
+    gallery: (() => { const g = (r as unknown as Record<string, unknown>)['gallery']; return Array.isArray(g) ? g.map(String).filter(Boolean) : []; })(),
   };
 }
 
@@ -62,6 +76,12 @@ export function LiveProvider({ children }: { children: ReactNode }) {
   }, [refresh]);
 
   const products = useMemo(() => (rows && rows.length ? rows.map(toProduct) : fallbackProducts), [rows]);
+  // Admin-controlled appearance: each theme key becomes a CSS variable on <html>.
+  useEffect(() => {
+    const theme = (settings as unknown as { theme?: Record<string, string> } | null)?.theme ?? {};
+    const root = document.documentElement;
+    for (const key of themeKeys) { const v = theme[key]; if (v) root.style.setProperty(`--${key}`, v); else root.style.removeProperty(`--${key}`); }
+  }, [settings]);
   return <C.Provider value={{ settings, team, products, version, refresh }}>{children}</C.Provider>;
 }
 

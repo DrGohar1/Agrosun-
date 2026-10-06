@@ -15,7 +15,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { LangProvider } from "@/lib/lang";
 import { LiveProvider } from "@/lib/live";
-import { Loader, TopBar, BottomNav, Footer } from "@/components/site/Shell";
+import { Loader, TopBar, Footer, BottomNav, FloatingChat } from "@/components/site/Shell";
 import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
@@ -136,6 +136,7 @@ function RootComponent() {
         <main><Outlet /></main>
         {!isAdmin && <Footer />}
         {!isAdmin && <BottomNav />}
+        {!isAdmin && <FloatingChat />}
         <Toaster position="top-center" />
       </LiveProvider></LangProvider>
     </QueryClientProvider>

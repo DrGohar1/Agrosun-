@@ -53,7 +53,7 @@ export async function exportEnquiries(rows: Message[]) {
     cell.alignment = { vertical: "middle", horizontal: "center", wrapText: true };
   });
   rows.forEach((m) => sheet.addRow([
-    new Date(m.created_at), m.status, m.name, m.company ?? "", m.country ?? "", m.product ?? "", m.email,
+    new Date(m.created_at), ({ new: "Received", contacted: "Processed", qualified: "Processed", closed: "Closed" } as Record<string, string>)[m.status] ?? m.status, m.name, m.company ?? "", m.country ?? "", m.product ?? "", m.email,
     m.phone ?? "", m.assigned_to, m.contacted_at ? new Date(m.contacted_at) : "",
     [m.message, m.internal_notes].filter(Boolean).join("\nNotes: "),
   ]));

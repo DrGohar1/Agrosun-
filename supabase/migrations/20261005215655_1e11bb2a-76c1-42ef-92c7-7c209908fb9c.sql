@@ -1,0 +1,2 @@
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS theme jsonb NOT NULL DEFAULT '{}'::jsonb, ADD COLUMN IF NOT EXISTS hero_cta jsonb NOT NULL DEFAULT '{}'::jsonb;
+ALTER TABLE public.products ADD COLUMN IF NOT EXISTS views integer NOT NULL DEFAULT 0, ADD COLUMN IF NOT EXISTS tons integer NOT NULL DEFAULT 0, ADD COLUMN IF NOT EXISTS gallery jsonb NOT NULL DEFAULT '[]'::jsonb;

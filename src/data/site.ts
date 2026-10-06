@@ -95,12 +95,17 @@ export const facilities = [
 
 export type Category = "fresh" | "iqf" | "processed";
 export const categories: { id: Category; label: L }[] = [
-  { id: "fresh", label: { en: "Fresh Produce", ar: "الحاصلات الطازجة" } },
-  { id: "iqf", label: { en: "IQF Frozen", ar: "التجميد السريع" } },
-  { id: "processed", label: { en: "Processed", ar: "منتجات مصنّعة" } },
+  { id: "fresh", label: { en: "Fresh Produce", ar: "الحاصلات الطازجة", it: "Prodotti freschi", fr: "Produits frais", de: "Frischware" } },
+  { id: "iqf", label: { en: "IQF Frozen", ar: "مجمد بالتجميد السريع", it: "Surgelati IQF", fr: "Surgelés IQF", de: "IQF-Tiefkühlware" } },
+  { id: "processed", label: { en: "Pickled & Brined", ar: "مخللات ومحاليل ملحية", it: "Sottaceti e salamoia", fr: "Marinés et en saumure", de: "Eingelegt & in Lake" } },
 ];
 
-export type Product = { id: string; category: Category; name: L; text: L; specs?: { en: string[]; ar: string[]; it?: string[]; fr?: string[]; de?: string[] }; packaging?: L; image: string; featured?: boolean };
+export const catalogGroups = {
+  fresh: { en: "Fresh Produce", ar: "الحاصلات الطازجة", it: "Prodotti freschi", fr: "Produits frais", de: "Frischware" },
+  processed: { en: "Processed Agro-Foods", ar: "الأغذية الزراعية المصنّعة", it: "Agroalimentari trasformati", fr: "Produits agroalimentaires transformés", de: "Verarbeitete Agrarlebensmittel" },
+} satisfies Record<string, L>;
+
+export type Product = { id: string; category: Category; name: L; text: L; specs?: { en: string[]; ar: string[]; it?: string[]; fr?: string[]; de?: string[] }; packaging?: L; image: string; featured?: boolean; inSeason?: boolean; seasonMonths?: number[]; views?: number; tons?: number; gallery?: string[] };
 
 export const products: Product[] = [
   { id: "grapes", category: "fresh", featured: true, image: pdfGrapes.url, name: { en: "Fresh Grapes", ar: "عنب فريش" }, text: { en: "Our flagship export product — prepared to standard specifications with exceptional care at every stage.", ar: "فخر إنتاجنا والمنتج الرئيسي للتصدير، مجهز بمواصفات قياسية وعناية فائقة في كل مرحلة." } },

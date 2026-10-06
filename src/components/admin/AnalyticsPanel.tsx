@@ -25,8 +25,8 @@ function download(name: string, rows: Record<string, unknown>[]) {
 }
 
 export function AnalyticsPanel({ products, messages }: { products: Product[]; messages: Message[] }) {
-  const [range, setRange] = useState<"all" | "30" | "90">("all");
-  const list = useMemo(() => range === "all" ? messages : messages.filter((m) => Date.now() - new Date(m.created_at).getTime() < Number(range) * 864e5), [messages, range]);
+  const [range, setRange] = useState("30");
+  const list = useMemo(() => messages.filter((m) => range === "all" || (range === "today" ? new Date(m.created_at).toDateString() === new Date().toDateString() : Date.now() - new Date(m.created_at).getTime() < Number(range) * 864e5)), [messages, range]);
 
   const monthly = useMemo(() => {
     const map = new Map<string, number>();
@@ -68,7 +68,7 @@ export function AnalyticsPanel({ products, messages }: { products: Product[]; me
 
   return <div className="space-y-6">
     <div className="flex flex-wrap items-center gap-2">
-      {(["all", "30", "90"] as const).map((r) => <Button key={r} size="sm" variant={range === r ? "default" : "outline"} onClick={() => setRange(r)}>{r === "all" ? "All time" : `Last ${r} days`}</Button>)}
+      {([["today", "Today"], ["7", "7 days"], ["30", "30 days"], ["all", "All time"]] as const).map(([r, l]) => <Button key={r} size="sm" className="rounded-full" variant={range === r ? "default" : "outline"} onClick={() => setRange(r)}>{l}</Button>)}
       <Button size="sm" variant="outline" className="ms-auto" onClick={brief}><Send />Send weekly brief</Button>
     </div>
     <div className="grid grid-cols-2 gap-4 md:grid-cols-4">{kpis.map((k, i) => <div key={k.label} className={card} style={{ animationDelay: `${i * 80}ms` }}><TrendingUp className="h-5 w-5 text-leaf" /><div className="tabular mt-3 text-4xl font-bold text-accent">{k.value}</div><p className="text-sm text-muted-foreground">{k.label}</p></div>)}</div>

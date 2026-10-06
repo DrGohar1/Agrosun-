@@ -7,3 +7,4 @@
 - Contact form writes to Supabase `contact_messages` (anon insert only); content tables (products, certifications, partners, site_banners) exist for the upcoming admin panel, admin access via `user_roles` + `has_role`.
 - Every editable public content record uses EN/AR/IT/FR/DE fields, with the phrase dictionary falling back from untranslated database values to English.
 - Enquiries are managed as a customer-service pipeline and exported client-side as branded Excel workbooks.
+- Keep the database product categories `fresh`, `iqf`, and `processed`; the public catalog maps them to Fresh Produce and Processed Agro-Foods (IQF Frozen / Pickled & Brined) to preserve CMS compatibility.
